@@ -18,7 +18,7 @@ This web app seeks to unite a community of both aspiring and seasoned poets to c
 # Tech Stack Ideas
 
 - [Draft.js](https://menubar.io/draft-js-collaborative-editor): Text editor with JS implementation
-- Share.js: Collaborative document editing
-- Node.js: Backend, use this for matching algorithm and API 
-- React.js: Front-end JS library, easy integration with Draft and Share
-- MongoDB + Compass: Database
+- [Share.js](https://sharejs.org): Collaborative document editing
+- [Node.js](https://nodejs.org/en): Backend, use this for matching algorithm and API 
+- [React.js](https://reactjs.org): Front-end JS library, easy integration with Draft and Share
+- [MongoDB + Compass](https://www.mongodb.com/): Database
