@@ -28,3 +28,5 @@ This web app seeks to unite a community of both aspiring and seasoned poets to c
 - [Freecodecamp](https://freecodecamp.org): In-depth courses on many languages
 - [The Odin Project](https://theodinproject.com/paths/full-stack-javascript/courses/javascript): Use mainly for front-end JS learning
 - [Figma](https://figma.com): Use for front-end website mock-ups and wireframe
+- [Node.js with MongoDB](https://www.youtube.com/watch?v=iYMtc8c945U&ab_channel=Simplilearn): Tutorial on Node + MongoDB
+- 
