@@ -22,3 +22,9 @@ This web app seeks to unite a community of both aspiring and seasoned poets to c
 - [Node.js](https://nodejs.org/en): Backend, use this for matching algorithm and API 
 - [React.js](https://reactjs.org): Front-end JS library, easy integration with Draft and Share
 - [MongoDB + Compass](https://www.mongodb.com/): Database
+
+# Learning and other Resources
+
+- [Freecodecamp](https://freecodecamp.org): In-depth courses on many languages
+- [The Odin Project](https://theodinproject.com/paths/full-stack-javascript/courses/javascript): Use mainly for front-end JS learning
+- [Figma](https://figma.com): Use for front-end website mock-ups and wireframe
