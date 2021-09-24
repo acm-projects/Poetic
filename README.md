@@ -7,7 +7,7 @@ This web app seeks to unite a community of both aspiring and seasoned poets to c
 - Create an algorithm to match at least 2 users together to write a poem based on their poem writing styles, genres, and tones
 - Create a tool that allows at least 2 users to work together on a poem concurrently. 
   - One user writes a few lines, then they can give a turn to the next user to write a few lines.
-- Create a system for "liking" poems.
+- Save poems to user accounts in a database.
 
 # Stretch Goals
 
