@@ -1,12 +1,12 @@
 module.exports = mongoose => {
     return mongoose.model(
-        "poems",
+        "users",
         mongoose.Schema(
             {
-                title: String,
-                authors: [{ type: String }],
+                username: String,
+                password: String,
                 tags: [{ type: String }],
-                body: String
+                poems: [{ type: String }]
             }
         )
     );

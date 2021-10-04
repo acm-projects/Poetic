@@ -1,7 +1,11 @@
 const express = require("express");
 const cors = require("cors");
+const bp = require('body-parser');
 
 const app = express();
+
+app.use(bp.json());
+app.use(bp.urlencoded({ extended: true }));
 
 var corsOptions = {
     origin: ['http://localhost:8081','http://localhost:3000']
@@ -24,6 +28,7 @@ db.mongoose
     });
 
 require("./app/routes/poem.routes")(app);
+require("./app/routes/user.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

@@ -1,13 +1,15 @@
 module.exports = app => {
-    const controller = require("../controllers/poem.controller.js");
+    const poemController = require("../controllers/poem.controller.js");
 
-    var router = require("express").Router();
+    const router = require("express").Router();
 
-    router.post("/", controller.create);
+    router.post("/", poemController.createPoem);
 
-    router.get("/", controller.findAll);
+    router.get("/", poemController.findAllPoems);
 
-    router.get("/:id", controller.findOne);
+    router.get("/:id", poemController.findPoemById);
+
+    router.get("/user/:username", poemController.findPoemsByUsername);
 
     app.use("/api/poems", router)
 }
