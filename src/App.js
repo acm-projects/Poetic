@@ -1,18 +1,31 @@
+import React, { useMemo, useState } from 'react'
+import { createEditor } from 'slate'
+import { Slate, Editable, withReact } from 'slate-react'
+import { Editor } from 'slate-react'
+import './index.css';
+import "tailwindcss/tailwind.css";
 import './App.css';
-function SecretComponent() {
-  return <h1>Super secret information for authorized users only</h1>;
-}
 
-function RegularComponent() {
-  return <h1>Everyone can see this component.</h1>
-}
+const App = () => {
+  const editor = useMemo(() => withReact(createEditor()), [])
 
+  const [value, setValue] = useState([
+    {
+      object: 'block',
+      type: 'paragraph',
+      children: [{ text: 'A line of text in a paragraph.'}],
+    },
+  ])
 
-function App(props) {
   return (
-    <>
-    {props.authorized ? <SecretComponent /> : <RegularComponent/>}
-    </>
+    <Slate
+      editor ={editor}
+      value={value}
+      onChange={newValue => setValue(newValue)}
+    >
+
+    <Editable />
+    </Slate>
   )
 }
 
