@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react'
+import React, { Component, useMemo, useState } from 'react'
 import { createEditor } from 'slate'
 import { Slate, Editable, withReact } from 'slate-react'
 import { Editor } from 'slate-react'
 import './index.css';
 import "tailwindcss/tailwind.css";
 import './App.css';
+
 
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
