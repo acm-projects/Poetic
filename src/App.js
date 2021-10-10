@@ -5,6 +5,8 @@ import { Editor } from 'slate-react'
 import './index.css';
 import "tailwindcss/tailwind.css";
 import './App.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Navigation, Home, Login, Collaborate } from "./components";
 
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
@@ -18,6 +20,19 @@ const App = () => {
   ])
 
   return (
+    <div className="App">
+      <Router>
+      <Navigation />
+        <Switch>
+          <Route path="/" exact component={() => <Home />} />
+          <Route path="/login" exact component={() => <Login />} />
+          <Route path="/collaborate" exact component={() => <Collaborate />} />
+        </Switch>
+      </Router>
+    </div>
+    
+
+/*
     <Slate
       editor ={editor}
       value={value}
@@ -26,7 +41,8 @@ const App = () => {
 
     <Editable />
     </Slate>
-  )
+    */
+  );
 }
 
 export default App;
