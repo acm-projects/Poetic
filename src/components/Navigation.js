@@ -13,12 +13,6 @@ const Navigation = (props) => {
                 </div>
                 <div class="flex-grow"/>
                 <div class="hover:underline ">
-                    <Link class="nav-link" to="/">
-                        Home
-                        <span class="sr-only">(current)</span>
-                    </Link>
-                </div>
-                <div class="hover:underline ">
                     <Link class="nav-link" to="/login">
                         Login
                     </Link>
@@ -26,6 +20,11 @@ const Navigation = (props) => {
                 <div class="hover:underline ">
                     <Link class="nav-link" to="/collaborate">
                         Collaborate
+                    </Link>
+                </div>
+                <div class="hover:underline ">
+                    <Link class="nav-link" to="/create">
+                        Create
                     </Link>
                 </div>
             </div>

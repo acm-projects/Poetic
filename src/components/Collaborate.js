@@ -4,8 +4,7 @@ import PoemScroll from "./PoemScroll";
 const Collaborate = () => {
     return (
         <div>
-            Collaborate
-            <PoemScroll />
+            
         </div>
     )
 }
