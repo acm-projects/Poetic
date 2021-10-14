@@ -5,10 +5,13 @@ import { Editor } from 'slate-react'
 import './index.css';
 import "tailwindcss/tailwind.css";
 import './App.css';
-
+import './nicepage.css'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { DocEditor, Navigation, Home, Login, Collaborate } from "./components";
 
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
+  
 
   const [value, setValue] = useState([
     {
@@ -19,14 +22,17 @@ const App = () => {
   ])
 
   return (
-    <Slate
-      editor ={editor}
-      value={value}
-      onChange={newValue => setValue(newValue)}
-    >
-
-    <Editable />
-    </Slate>
+    <div className="App">
+    <Router>
+    <Navigation />
+      <Switch>
+        <Route path="/" exact component={() => <Home />} />
+        <Route path="/login" exact component={() => <Login />} />
+        <Route path="/collaborate" exact component={() => <Collaborate />} />
+        <Route path="/editor" exact component={() => <DocEditor/>} />
+      </Switch>
+    </Router>
+  </div>
   )
 }
 
