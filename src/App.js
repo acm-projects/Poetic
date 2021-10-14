@@ -5,7 +5,6 @@ import { Editor } from 'slate-react'
 import './index.css';
 import "tailwindcss/tailwind.css";
 import './App.css';
-import './nicepage.css'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { DocEditor, Navigation, Home, Login, Collaborate } from "./components";
 

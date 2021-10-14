@@ -8,7 +8,7 @@ const Home = () => {
     <div>
         <h2>Home</h2>
         <div class="flex">
-            <div class="flex-1 flex box-content h-32 w-32 p-4 bg-blue-300 hover:bg-blue-500" style="font-size: 1rem; letter-spacing: 0px;">
+            <div class="flex-1 flex box-content h-32 w-32 p-4 bg-blue-300 hover:bg-blue-500">
             </div>
         </div>
      </div>);
