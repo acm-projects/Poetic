@@ -1,5 +1,82 @@
-import React from 'react';
-const DocEditor = () => {
+import React, { Component } from 'react';
+import { Editor } from 'react-draft-wysiwyg';
+import PropTypes from 'prop-types';
+import { BlockPicker } from 'react-color';
+import { EditorState } from 'draft-js';
+import 'draft-js/dist/Draft.css';
+
+/*
+class ColorPic extends Component {
+  static propTypes = {
+    expanded: PropTypes.bool,
+    onExpandEvent: PropTypes.func,
+    onChange: PropTypes.func,
+    currentState: PropTypes.object,
+  };
+
+  stopPropagation = (event) => {
+    event.stopPropagation();
+  };
+
+  onChange = (color) => {
+    const { onChange } = this.props;
+    onChange('color', color.hex);
+  }
+
+  renderModal = () => {
+    const { color } = this.props.currentState;
+    return (
+      <div
+        onClick={this.stopPropagation}
+      >
+        <BlockPicker color={color} onChangeComplete={this.onChange} />
+      </div>
+    );
+  };
+
+  render() {
+    const { expanded, onExpandEvent } = this.props;
+    return (
+      <div
+        aria-haspopup="true"
+        aria-expanded={expanded}
+        aria-label="rdw-color-picker"
+      >
+        <div
+          onClick={onExpandEvent}
+        >
+          <img
+            src= "https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/master/pass/google-logo.jpg"
+            alt=""
+          />
+        </div>
+        {expanded ? this.renderModal() : undefined}
+      </div>
+    );
+  }
+}
+
+
+
+const EditorCustomizedToolbarOption = () => (
+  <Editor
+    wrapperClassName="demo-wrapper"
+    editorClassName="demo-editor"
+    toolbar={{
+      colorPicker: { component: ColorPic },
+    }}
+  />
+);
+
+*/
+
+class DocEditor extends Component {
+  //Function that handles the end turn button
+  handleClick(e) {
+    console.log("You clicked submit.");
+  }
+
+  render() {
     return (
         <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
         <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
@@ -33,13 +110,15 @@ const DocEditor = () => {
           </div>
         </nav>
       </div>
-      <div class="flex">
+
+
+      <div class="place-self-auto u-align-center">
         <section class="u-clearfix u-section-1" id="sec-05a1">
       <div class="u-clearfix u-sheet u-sheet-1">
         <div class="u-clearfix u-expanded-width u-gutter-0 u-layout-wrap u-layout-wrap-1">
           <div class="u-layout">
             <div class="u-layout-row">
-              <div class="u-container-style u-layout-cell u-left-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
+              <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
                 <div class="u-container-layout u-container-layout-1">
                   <h2 class="u-align-center u-text u-text-default u-text-1">Poem Title <span>with Collaborator's Name</span>
                   </h2>
@@ -47,12 +126,40 @@ const DocEditor = () => {
                     <span class="u-text-custom-color-2"></span>
                   </p>
                   <h5 class="u-align-center u-text u-text-custom-color-2 u-text-3" data-animation-name="pulse" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""> &lt;color&gt;</h5>
-                  <div class="u-border-5 u-border-custom-color-5 u-custom-color-3 u-radius-15 u-shape u-shape-round u-shape-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""></div>
-                  <div class="u-border-5 u-border-custom-color-2 u-custom-color-6 u-radius-15 u-shape u-shape-round u-shape-2" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1000" data-animation-direction=""></div>
-                  <div class="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-26 u-shape-round u-group-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500" data-animation-direction="">
+                  <div class="u-border-5 u-border-custom-color-5 u-custom-color-3 u-radius-15 u-shape u-shape-round u-shape-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="0" data-animation-direction="">
+                  <Editor
+                  toolbarHidden
+                  wrapperClassName="wrapper-class"
+                  editorClassName="editor-class"
+                  toolbarClassName="toolbar-class"
+                  toolbar={{
+                      inline: { inDropdown: true },
+                        list: { inDropdown: true },
+                      textAlign: { inDropdown: true },
+                      link: { inDropdown: true },
+                  history: { inDropdown: true },
+                  }}
+                  />
+                  </div>
+                  <div class="u-border-5 u-border-custom-color-2 u-custom-color-6 u-radius-15 u-shape u-shape-round u-shape-2" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1000" data-animation-direction="">
+                  <Editor
+                  toolbarHidden
+                  wrapperClassName="wrapper-class"
+                  editorClassName="editor-class"
+                  toolbarClassName="toolbar-class"
+                  toolbar={{
+                      inline: { inDropdown: true },
+                      list: { inDropdown: true },
+                      textAlign: { inDropdown: true },
+                      link: { inDropdown: true },
+                      history: { inDropdown: true },
+                  }}
+                  />
+
+                  </div>
+                  <div class="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500" data-animation-direction="">
                     <div class="u-container-layout u-container-layout-2">
-                      <p class="u-text u-text-default u-text-4">Poem in Progress will be displayed here:<br>
-                        </br>
+                      <p class="u-text u-text-default u-text-4">Poem in Progress will be displayed here:<br></br>
                         <span class="u-text-custom-color-1">This is a haiku</span>
                         <br/>
                         <span class="u-text-custom-color-2">Everybody loves haikus!</span>
@@ -61,7 +168,7 @@ const DocEditor = () => {
                       </p>
                     </div>
                   </div>
-                  <a href="https://github.com/acm-projects/Poetic" class="u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1">End Turn</a>
+                  <button class="u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-black u-btn-1" onClick={() => this.handleClick()}>End Turn</button>
                 </div>
               </div>
               <div class="u-align-left u-container-style u-layout-cell u-right-cell u-size-17 u-size-xs-60 u-layout-cell-2" src="">
@@ -118,9 +225,7 @@ const DocEditor = () => {
     </section>
         </div>
     </div>
-
-
-);     
+    );    
+  }
 }
-
 export default DocEditor;

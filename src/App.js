@@ -6,7 +6,7 @@ import './index.css';
 import "tailwindcss/tailwind.css";
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { DocEditor, Navigation, Home, Login, Collaborate } from "./components";
+import { DocEditor, Navigation, Home, Login, Collaborate} from "./components";
 
 const App = () => {
   const editor = useMemo(() => withReact(createEditor()), [])
