@@ -11,5 +11,7 @@ module.exports = app => {
 
     router.get("/username/:username", userController.findByUsername);
 
+    router.post("/compatibility/:username", userController.getCompatibility);
+
     app.use("/api/users", router)
 }
