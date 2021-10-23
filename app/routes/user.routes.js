@@ -3,8 +3,6 @@ module.exports = app => {
 
     const router = require("express").Router();
 
-    router.post("/", userController.createUser);
-
     router.get("/", userController.findAllUsers);
 
     router.get("/poem/:id", userController.findByPoemId);
