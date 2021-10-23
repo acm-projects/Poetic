@@ -5,11 +5,6 @@ exports.logout = (req, res) => {
     res.send("Logged out");
 }
 
-exports.test = (req, res) => {
-    req.session.test ? req.session.test++ : req.session.test=1;
-    res.send(req.session.test.toString() + " "+req.user.username);
-}
-
 exports.postLogin = (req, res) => {
     res.json(req.user);
 }

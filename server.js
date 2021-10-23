@@ -36,11 +36,13 @@ db.passport.use(new LocalStrategy(
     function(username, password, done) {
         console.log(username, password);
         db.users.findOne({ username: username }, function (err, user) {
-            if (err) { return done(err); }
+            if (err) {
+                return done(err);
+            }
             if (!user) {
                 return done(null, false, { message: 'Incorrect username.' });
             }
-            if (!user.password === password) {
+            if (user.password !== password) {
                 return done(null, false, { message: 'Incorrect password.' });
             }
             return done(null, user);
@@ -77,7 +79,7 @@ db.mongoose
 
 require("./app/routes/poem.routes")(app);
 require("./app/routes/user.routes")(app);
-require("./app/routes/login.routes")(app);
+require("./app/routes/authentication.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
