@@ -2,6 +2,14 @@ const db = require("../models");
 const Poem = db.poems;
 const User = db.users;
 
+/**
+ * @param req
+ * @param {string} req.body.title
+ * @param {string[]} req.body.authors
+ * @param {string[]} req.body.tags
+ * @param {string} req.body.body
+ * @param res
+ */
 // Create and save a Poem
 exports.createPoem = (req, res) => {
     // Validate request
@@ -32,6 +40,10 @@ exports.createPoem = (req, res) => {
         });
 }
 
+/**
+ * @param req
+ * @param res
+ */
 // Retrieve all Poems from the database
 exports.findAllPoems = (req, res) => {
     Poem.find()
@@ -46,6 +58,11 @@ exports.findAllPoems = (req, res) => {
         });
 }
 
+/**
+ * @param req
+ * @param req.params.id
+ * @param res
+ */
 // Find a single Poem with an id
 exports.findPoemById = (req, res) => {
     const id = req.params.id;
@@ -63,6 +80,11 @@ exports.findPoemById = (req, res) => {
         });
 };
 
+/**
+ * @param req
+ * @param {string} req.params.username
+ * @param res
+ */
 // Find all Poems associated with a user
 exports.findPoemsByUsername = (req, res) => {
     const username = req.params.username;
@@ -88,9 +110,8 @@ exports.findPoemsByUsername = (req, res) => {
                         res.status(500).send({
                             message: err.message || "Error retrieving poems by username."
                         });
-                    })
+                    });
             }
-
         })
         .catch(err => {
             res.status(500).send({

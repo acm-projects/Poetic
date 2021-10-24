@@ -2,6 +2,14 @@ const db = require("../models");
 const User = db.users;
 const Poem = db.poems;
 
+/**
+ * @param req
+ * @param {string} req.body.username
+ * @param {string} req.body.password
+ * @param {string[]} req.body.tags
+ * @param {string[]} req.body.poems
+ * @param res
+ */
 // Create and save a User
 exports.createUser = (req, res) => {
     // Validate request
@@ -32,6 +40,10 @@ exports.createUser = (req, res) => {
         });
 }
 
+/**
+ * @param req
+ * @param res
+ */
 exports.findAllUsers = (req, res) => {
     User.find()
         .then(data => {
@@ -45,6 +57,11 @@ exports.findAllUsers = (req, res) => {
         });
 }
 
+/**
+ * @param req
+ * @param {string} req.params.username
+ * @param res
+ */
 // Find a single User by username
 exports.findByUsername = (req, res) => {
     const username = req.params.username;
@@ -66,6 +83,11 @@ exports.findByUsername = (req, res) => {
         });
 }
 
+/**
+ * @param req
+ * @param {string} req.params.id
+ * @param res
+ */
 // Find all Users associated with a poem
 exports.findByPoemId = (req, res) => {
     const id = req.params.id;
@@ -100,6 +122,17 @@ exports.findByPoemId = (req, res) => {
         });
 }
 
+
+/**
+ * @param req
+ * @param {User} req.user
+ * @param req.body
+ * @param req.body.conditions
+ * @param {int} req.body.conditions.proximityWeight
+ * @param req.params
+ * @param {string} req.params.username
+ * @param res
+ */
 exports.getCompatibility = (req, res) => {
     const conditions = req.body.conditions;
     const allPoemTags = [];
@@ -121,7 +154,7 @@ exports.getCompatibility = (req, res) => {
                     .then(data => {
                         console.log(data);
                         data.forEach(poem => poem.tags.forEach(tag => allPoemTags.push(tag)));
-                        res.send({ "score": compatibilityScore(req.body.user, user, allPoemTags, conditions) });
+                        res.send({ "score": compatibilityScore(req.user, user, allPoemTags, conditions) });
                     })
                     .catch(err => {
                         res.status(500).send({
@@ -138,6 +171,18 @@ exports.getCompatibility = (req, res) => {
         });
 }
 
+/**
+ * Calculate a weighted compatibility score between the provided users
+ *
+ * @param {User} user The source user
+ * @param {User} potentialUser The user whose compatibility is being asked for
+ * @param {string[]} allTags The combined array of all the tags of the poems the potentialUser has worked on
+ * @param conditions
+ * @param conditions.proximityWeight The weight of how close in terms of poems written the user wants to be with the potentialUser,
+ *                                   positive if you want the match to have more poems than you,
+ *                                   negative if you want the match to have fewer poems than you.
+ * @returns {number} The final total score between the two users
+ */
 function compatibilityScore(user, potentialUser, allTags, conditions) {
     let compatibility = 0;
     compatibility += proximityValue(user.poems.length, potentialUser.poems.length, conditions.proximityWeight);
@@ -146,7 +191,7 @@ function compatibilityScore(user, potentialUser, allTags, conditions) {
 }
 
 /**
- * Calculates a score value based on the difference in the number of poems between the user and potential match
+ * Calculate a score value based on the difference in the number of poems between the user and potential match
  * @param {int} userPoemCount The user's number of poems.
  * @param {int} potentialMatchPoemCount The potential match's number of poems.
  * @param {number} weight The weight of the value, positive if you want the match to have more poems than you,
@@ -159,7 +204,7 @@ function proximityValue(userPoemCount, potentialMatchPoemCount, weight) {
 }
 
 /**
- * Calculates a score value based on the number of matching tags between the user's personal tags and a list of poem tags.
+ * Calculate a score value based on the number of matching tags between the user's personal tags and a list of poem tags.
  * @param {User} user The user to test against.
  * @param {string[]} allTags The list of tags (possibly contains duplicates).
  * @returns {number} The score.
