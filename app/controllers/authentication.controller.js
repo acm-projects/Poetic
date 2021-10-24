@@ -8,6 +8,7 @@ const User = db.users;
  */
 exports.logout = (req, res) => {
     req.logout();
+    console.log("Logged out");
     res.send("Logged out");
 }
 
@@ -17,6 +18,7 @@ exports.logout = (req, res) => {
  * @param res
  */
 exports.postLogin = (req, res) => {
+    console.log(req.user);
     res.json(req.user);
 }
 
@@ -27,14 +29,16 @@ exports.postLogin = (req, res) => {
  * @param {string[]} req.body.tags
  * @param {string[]} req.body.poems
  * @param res
+ * @param done
  */
-exports.register = (req, res) => {
+exports.register = (req, res, done) => {
     db.users.findOne( { username:req.body.username },
         (err,user) => {
             if(err) {
+                res.send({ message: "Error checking for that username already exists." });
                 done(null, false);
             } else if(user) {
-                res.redirect("/")
+                res.send({ message: "user " + user.username + " already exists." });
             } else {
                 const user = new User({
                     username: req.body.username,
@@ -44,8 +48,12 @@ exports.register = (req, res) => {
                 });
                 User.create(user,(err,user)=>{
                     if(err) {
+                        console.log("Error creating the new user.");
+                        res.send({ message: "Error creating the new user." });
                         done(null,false);
                     } else {
+                        console.log("User created:" + user);
+                        res.send({ message: "User created.", user: user });
                         done(null,user);
                     }
                 });

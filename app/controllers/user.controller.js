@@ -4,49 +4,12 @@ const Poem = db.poems;
 
 /**
  * @param req
- * @param {string} req.body.username
- * @param {string} req.body.password
- * @param {string[]} req.body.tags
- * @param {string[]} req.body.poems
- * @param res
- */
-// Create and save a User
-exports.createUser = (req, res) => {
-    // Validate request
-    if (!req.body.username) {
-        res.status(400).send({ message: "Contents cannot be empty. "});
-        return;
-    }
-
-    // Create a User
-    const user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        tags: req.body.tags,
-        poems: req.body.poems
-    });
-
-    // Save User in the database
-    user
-        .save(user)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the User."
-            });
-        });
-}
-
-/**
- * @param req
  * @param res
  */
 exports.findAllUsers = (req, res) => {
     User.find()
         .then(data => {
+            data.forEach(user => user.password = null);
             console.log(data);
             res.send(data);
         })
@@ -73,8 +36,14 @@ exports.findByUsername = (req, res) => {
 
     User.findOne({ username: username })
         .then(data => {
-            console.log(data);
-            res.send(data);
+            if (!data) {
+                console.log("No user found with username " + username);
+                res.status(404).send({ message: "No user found with username " + username });
+            } else {
+                data.password = null;
+                console.log(data);
+                res.send(data);
+            }
         })
         .catch(err => {
             res.status(500).send({
@@ -105,6 +74,7 @@ exports.findByPoemId = (req, res) => {
                 const authors = poemData.authors;
                 User.find({ username: { $in: authors } })
                     .then(data => {
+                        data.forEach(user => user.password = null);
                         console.log(data);
                         res.send(data);
                     })
@@ -160,9 +130,8 @@ exports.getCompatibility = (req, res) => {
                         res.status(500).send({
                             message: err.message || "Error retrieving poems by username."
                         });
-                    })
+                    });
             }
-
         })
         .catch(err => {
             res.status(500).send({

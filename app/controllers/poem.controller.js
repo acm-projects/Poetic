@@ -30,6 +30,7 @@ exports.createPoem = (req, res) => {
     poem
         .save(poem)
         .then(data => {
+            console.log(data);
             res.send(data);
         })
         .catch(err => {
@@ -69,9 +70,13 @@ exports.findPoemById = (req, res) => {
 
     Poem.findById(id)
         .then(data => {
-            if (!data)
-                res.status(404).send({ message: "Not found Poem with id " + id });
-            else res.send(data);
+            if (!data) {
+                console.log("No poem found with id " + id);
+                res.status(404).send({ message: "No poem found with id " + id });
+            } else {
+                console.log(data);
+                res.send(data);
+            }
         })
         .catch(err => {
             res
