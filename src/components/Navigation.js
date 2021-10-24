@@ -33,6 +33,11 @@ const Navigation = (props) => {
                             Editor
                         </Link>
                     </div>
+                    <div class="hover:underline ">
+                        <Link class="nav-link" to="/create">
+                            Profile
+                        </Link>
+                    </div>
             </div>
         </nav>
     </div>

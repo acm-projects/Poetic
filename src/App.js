@@ -7,19 +7,9 @@ import "tailwindcss/tailwind.css";
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { DocEditor, Navigation, Home, Login, Collaborate} from "./components";
+import Profile from './components/Profile';
 
 const App = () => {
-  const editor = useMemo(() => withReact(createEditor()), [])
-  
-
-  const [value, setValue] = useState([
-    {
-      object: 'block',
-      type: 'paragraph',
-      children: [{ text: 'A line of text in a paragraph.'}],
-    },
-  ])
-
   return (
     <div className="App">
     <Router>
@@ -29,6 +19,7 @@ const App = () => {
         <Route path="/login" exact component={() => <Login />} />
         <Route path="/collaborate" exact component={() => <Collaborate />} />
         <Route path="/editor" exact component={() => <DocEditor/>} />
+        <Route path="/profile" exact component={() => <Profile/>} />
       </Switch>
     </Router>
   </div>

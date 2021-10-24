@@ -1,17 +1,26 @@
 import React, { useMemo, useState } from 'react'
-import { createEditor } from 'slate'
-import { Slate, Editable, withReact } from 'slate-react'
-import { Editor } from 'slate-react'
+import PoemScroll from './PoemScroll';
 
 const Home = () => {
     return (
-    <div>
-        <h2>Home</h2>
-        <div class="flex">
-            <div class="flex-1 flex box-content h-32 w-32 p-4 bg-blue-300 hover:bg-blue-500">
+        <div class="flex gap-8 p-4 bg-red-200 shadow-inner">
+            <div class="text-6xl rounded bg-white p-4 shadow">
+                Hello
+            </div>
+            <div class="flex flex-col flex-1">
+                <div class="bg-blue-100 rounded p-2">
+                    Popular
+                </div>
+                <PoemScroll />
+            </div>
+            <div class="flex flex-col flex-1">
+                <div class="bg-green-100 rounded p-2">
+                    Based on tags
+                </div>
+                <PoemScroll />
             </div>
         </div>
-     </div>);
+    )
 }
 
 export default Home;
