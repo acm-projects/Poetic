@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { Editor } from 'react-draft-wysiwyg';
+import { EditorState, Editor, convertToRaw, convertFromRaw } from 'draft-js';
+import debounce from 'lodash/debounce'
+/*
 import PropTypes from 'prop-types';
 import { BlockPicker } from 'react-color';
 import { EditorState } from 'draft-js';
+*/
 import 'draft-js/dist/Draft.css';
 
 /*
@@ -71,12 +74,48 @@ const EditorCustomizedToolbarOption = () => (
 */
 
 class DocEditor extends Component {
+
+  constructor(props) {
+
+    super(props);
+
+    this.state = { };
+    const content = window.localStorage.getItem('content');
+
+    if(content) {
+      this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
+    } else {
+      this.state.editorState = EditorState.createEmpty();
+    }
+  }
+
+  saveContent = debounce((content) => {
+    //api call
+    window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
+  }, 2000);
+
+  onChange = (editorState) => {
+    const contentState = editorState.getCurrentContent();
+    console.log('content state', convertToRaw(contentState));
+    this.saveContent(contentState);
+    this.setState({
+      editorState,
+    });
+  }
+
   //Function that handles the end turn button
   handleClick(e) {
     console.log("You clicked submit.");
+    //WIP
   }
 
   render() {
+    if (!this.state.editorState) {
+      return (
+        <h3 className="loading">Loading...</h3>
+      );
+    }
+
     return (
         <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
         <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
@@ -128,6 +167,8 @@ class DocEditor extends Component {
                   <h5 class="u-align-center u-text u-text-custom-color-2 u-text-3" data-animation-name="pulse" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""> &lt;color&gt;</h5>
                   <div class="u-border-5 u-border-custom-color-5 u-custom-color-3 u-radius-15 u-shape u-shape-round u-shape-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="0" data-animation-direction="">
                   <Editor
+                  editorState ={this.state.editorState}
+                  onChange={this.onChange}
                   toolbarHidden
                   wrapperClassName="wrapper-class"
                   editorClassName="editor-class"
@@ -143,6 +184,8 @@ class DocEditor extends Component {
                   </div>
                   <div class="u-border-5 u-border-custom-color-2 u-custom-color-6 u-radius-15 u-shape u-shape-round u-shape-2" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1000" data-animation-direction="">
                   <Editor
+                  editorState ={this.state.editorState}
+                  onChange={this.onChange}
                   toolbarHidden
                   wrapperClassName="wrapper-class"
                   editorClassName="editor-class"
