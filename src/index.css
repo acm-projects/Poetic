@@ -1,11 +1,20 @@
 div.DraftEditor-root {
-  height: 90px;
-  width: 300px;
+  height: 100%;
+  width: 100%;
+  max-height:450px;
   overflow-y: auto;
 }
 div.DraftEditor-editorContainer,
 div.public-DraftEditor-content {
-  height: 80%;
+  height: 90%;
+  overflow-y: auto;
+}
+
+.customEditor {
+  color: #999;
+  font-family: 'Hoefler Text', Georgia, serif;
+  font-style: italic;
+  text-align: center;
 }
 
 .u-section-1 .u-sheet-1 {
@@ -249,13 +258,7 @@ div.public-DraftEditor-content {
     margin-right: 0;
   }
 }
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Marketplace
-Explore
- 
+
 .u-section-1 .u-sheet-1 {
   min-height: 1233px;
 }

@@ -8,70 +8,82 @@ import { EditorState } from 'draft-js';
 */
 import 'draft-js/dist/Draft.css';
 
-/*
-class ColorPic extends Component {
-  static propTypes = {
-    expanded: PropTypes.bool,
-    onExpandEvent: PropTypes.func,
-    onChange: PropTypes.func,
-    currentState: PropTypes.object,
-  };
-
-  stopPropagation = (event) => {
-    event.stopPropagation();
-  };
-
-  onChange = (color) => {
-    const { onChange } = this.props;
-    onChange('color', color.hex);
-  }
-
-  renderModal = () => {
-    const { color } = this.props.currentState;
-    return (
-      <div
-        onClick={this.stopPropagation}
-      >
-        <BlockPicker color={color} onChangeComplete={this.onChange} />
-      </div>
-    );
-  };
-
-  render() {
-    const { expanded, onExpandEvent } = this.props;
-    return (
-      <div
-        aria-haspopup="true"
-        aria-expanded={expanded}
-        aria-label="rdw-color-picker"
-      >
-        <div
-          onClick={onExpandEvent}
-        >
-          <img
-            src= "https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/master/pass/google-logo.jpg"
-            alt=""
-          />
-        </div>
-        {expanded ? this.renderModal() : undefined}
-      </div>
-    );
+function myBlockStyleFn(contentBlock) {
+  const type = contentBlock.getType();
+  if (type === 'blockquote') {
+    return 'customEditor';
   }
 }
 
 
 
-const EditorCustomizedToolbarOption = () => (
-  <Editor
-    wrapperClassName="demo-wrapper"
-    editorClassName="demo-editor"
-    toolbar={{
-      colorPicker: { component: ColorPic },
-    }}
-  />
-);
+class BlockEditor extends Component {
 
-*/
+  constructor(props) {
+
+    super(props);
+
+    this.state = { };
+    const content = window.localStorage.getItem('content');
+
+    if(content) {
+      this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
+    } else {
+      this.state.editorState = EditorState.createEmpty();
+    }
+  }
+
+  saveContent = debounce((content) => {
+    //api call
+    window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
+  }, 2000);
+
+  onChange = (editorState) => {
+    const contentState = editorState.getCurrentContent();
+    console.log('content state', convertToRaw(contentState));
+    this.saveContent(contentState);
+    this.setState({
+      editorState,
+    });
+  }
+
+  //Function that handles the end turn button
+  handleClick(e) {
+    console.log("You clicked submit.");
+    //WIP
+  }
+
+  render() {
+    if (!this.state.editorState) {
+      return (
+        <h3 className="loading">Loading...</h3>
+      );
+    }
+
+    return (
+      <div class="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500" data-animation-direction="">
+                    <div class="u-container-layout u-container-layout-2 h-3/6">
+                    <Editor
+                  editorState ={this.state.editorState}
+                  onChange={this.onChange}
+                  toolbarHidden
+                  wrapperClassName="wrapper-class"
+                  editorClassName="editor-class"
+                  toolbarClassName="toolbar-class"
+                  toolbar={{
+                      inline: { inDropdown: true },
+                        list: { inDropdown: true },
+                      textAlign: { inDropdown: true },
+                      link: { inDropdown: true },
+                  history: { inDropdown: true },
+                  }}
+                  />
+                  </div>
+                  <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>End Turn</button>
+                  </div>
+    )
+  }
+}
 
 class DocEditor extends Component {
 
@@ -198,20 +210,8 @@ class DocEditor extends Component {
                       history: { inDropdown: true },
                   }}
                   />
-
+                  <BlockEditor/>
                   </div>
-                  <div class="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500" data-animation-direction="">
-                    <div class="u-container-layout u-container-layout-2">
-                      <p class="u-text u-text-default u-text-4">Poem in Progress will be displayed here:<br></br>
-                        <span class="u-text-custom-color-1">This is a haiku</span>
-                        <br/>
-                        <span class="u-text-custom-color-2">Everybody loves haikus!</span>
-                        <br/>
-                        <span class="u-text-custom-color-1">But they are boring</span>
-                      </p>
-                    </div>
-                  </div>
-                  <button class="u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-black u-btn-1" onClick={() => this.handleClick()}>End Turn</button>
                 </div>
               </div>
               <div class="u-align-left u-container-style u-layout-cell u-right-cell u-size-17 u-size-xs-60 u-layout-cell-2" src="">
