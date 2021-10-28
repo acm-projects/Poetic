@@ -1,5 +1,0 @@
-/node_modules
-.vscode
-.vs
-.idea
-./app/config/db.config.js
