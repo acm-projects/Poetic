@@ -7,8 +7,8 @@ export default function Home(props) {
         username: '',
         password: '',
     });
-    const loginRoute = 'http://localhost:8080/api/authentication/login'
-    const signupRoute = 'http://localhost:8080/api/authentication/register'
+    const loginRoute = 'http://localhost:8081/api/authentication/login'
+    const signupRoute = 'http://localhost:8081/api/authentication/register'
 
     
     const handleLogin = async (e) => {
@@ -20,9 +20,9 @@ export default function Home(props) {
         axios.post(loginRoute, user)
             .then(res => {
                 console.log(res);
+                props.handleLogInState();
             })
             .catch(err => {
-                props.handleLogInState();
                 console.error(err);
             });
     };
@@ -36,9 +36,9 @@ export default function Home(props) {
         axios.post(signupRoute, user)
             .then(res => {
                 console.log(res);
+                props.handleLogInState();
             })
             .catch(err => {
-                props.handleLogInState();
                 console.error(err);
             });
     }
