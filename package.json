@@ -1,0 +1,62 @@
+{
+  "name": "react-editor",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@draft-js-plugins/editor": "^4.1.0",
+    "@draft-js-plugins/static-toolbar": "^4.1.2",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.23.0",
+    "craco": "0.0.3",
+    "draft": "^0.2.3",
+    "draft-js": "^0.11.7",
+    "draft-js-editor": "^1.12.4",
+    "draftjs-to-html": "^0.9.1",
+    "html-to-draftjs": "^1.5.0",
+    "immutable": "^4.0.0-rc.15",
+    "mongo-db": "^1.0.2",
+    "node": "^16.10.0",
+    "nodejs": "^0.0.0",
+    "react": "^17.0.2",
+    "react-color": "^2.19.3",
+    "react-dom": "^17.0.2",
+    "react-draft-wysiwyg": "^1.14.7",
+    "react-from-json": "^0.7.2",
+    "react-router-dom": "^5.3.0",
+    "react-scripts": "3.4.3",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.4",
+    "slate": "^0.66.5",
+    "slate-react": "^0.66.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.3.6",
+    "css-loader": "^6.4.0",
+    "postcss": "^8.3.8",
+    "style-loader": "^3.3.0",
+    "tailwindcss": "^2.2.16"
+  }
+}
