@@ -28,9 +28,21 @@ exports.createPoem = (req, res) => {
 
     // Save Poem in the database
     poem
-        .save(poem)
+        .save()
         .then(data => {
-            console.log(data);
+            console.log("Poem saving returned: " + data);
+
+            poem.authors.forEach(authorUsername => {
+                User.update(
+                    { username: authorUsername },
+                    { $push: poem.title }
+                ).then(data => {
+                    console.log("User updating returned: " + data);
+                }).catch(err => {
+                    console.log("Error occurred during user update: " + err);
+                });
+            });
+
             res.send(data);
         })
         .catch(err => {

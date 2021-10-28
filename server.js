@@ -77,6 +77,7 @@ db.mongoose
         process.exit();
     });
 
+// Add all of the routes exported from these routes files
 require("./app/routes/poem.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/authentication.routes")(app);
