@@ -7,7 +7,7 @@ export default function Login () {
         username: '',
         password: '',
     });
-    const loginRoute = 'http://localhost:8080/api/authentication/login'
+    const loginRoute = 'http://localhost:8081/api/authentication/login'
 
     const handleSubmit = async (e) => {
         e.preventDefault();
