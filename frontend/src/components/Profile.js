@@ -1,31 +1,34 @@
-import React, { useState } from 'react';
-import { Button, Checkbox, Form } from 'semantic-ui-react'
+import React from "react";
+import Tag from "./Tag";
+import Poem from "./Poem";
 
-export default function Profile() {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [checkbox, setCheckbox] = useState(false);
-    const postData = () => {
-        console.log(firstName);
-        console.log(lastName);
-        console.log(checkbox);
+const Profile = (props) => {
+    const tagList = []
+    const tagWords = ["haiku", "serious", "funny", "rhyming", "abstract"]
+
+    for (const [index, value] of tagWords.entries()) {
+        tagList.push(<Tag content={value} />)
     }
+
+
     return (
         <div>
-            <Form className="create-form">
-                <Form.Field>
-                    <label>First Name</label>
-                    <input placeholder='First Name' onChange={(e) => setFirstName(e.target.value)}/>
-                </Form.Field>
-                <Form.Field>
-                    <label>Last Name</label>
-                    <input placeholder='Last Name' onChange={(e) => setLastName(e.target.value)}/>
-                </Form.Field>
-                <Form.Field>
-                    <Checkbox label='I agree to the Terms and Conditions' onChange={(e) => setCheckbox(!checkbox)}/>
-                </Form.Field>
-                <Button onClick={postData} type='submit'>Submit</Button>
-            </Form>
+            <div class="flex flex-col gap-4 bg-red-50">
+                <div class="flex">
+                    <div class="bg-green-50 p-4">
+                        image
+                    </div>
+                    <div class="bg-red-200 text-7xl p-4">
+                        {props.username}
+                    </div>
+                    <div class="flex justify-evenly flex-1 bg-red-100 p-4">
+                        {tagList}
+                    </div>
+                </div>
+                <Poem content="user's content" author="username" />
+            </div>
         </div>
-    )
+    );
 }
+
+export default Profile;

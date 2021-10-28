@@ -9,10 +9,10 @@ const Main = () => {
                 Hello
                 </div>
                 <div class="bg-red-50 rounded p-4 font-normal text-6xl">
-                    Here are some words.
+                    Welcome to Poet.
                 </div>
                 <div class="text-left text-4xl font-light">
-                    &emsp;These words describe what poetic is blah blah blah
+                    The first app designed solely for the purpose 
                 </div>
             </div>
             
