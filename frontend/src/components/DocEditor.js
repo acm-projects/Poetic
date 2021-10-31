@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { EditorState, Editor, convertToRaw, convertFromRaw } from 'draft-js';
 import debounce from 'lodash/debounce'
 /*
@@ -7,35 +7,51 @@ import { BlockPicker } from 'react-color';
 import { EditorState } from 'draft-js';
 */
 import 'draft-js/dist/Draft.css';
+import axios from 'axios';
+import { ClientRequest } from 'http';
 
+/*
 function myBlockStyleFn(contentBlock) {
   const type = contentBlock.getType();
   if (type === 'blockquote') {
     return 'customEditor';
   }
 }
+Strech Goal: change doc editor visuals when it is available
+*/
 
+const poemCreateRoute = 'http://localhost:8081/api/poems/'
+const loginRoute = 'http://localhost:8081/api/authentication/login'
 
+//get user names of two users (user 2 will be found using matching algorithm)
+const username1 = localStorage.getItem('username');
+const userRoute1 = "http://localhost:8081/api/users/username/" + username1;
+const username2 = "unknown";
+const userRoute2 = "http://localhost:8081/api/users/username/" + username2;
+let user1 = { };
+let user2 = { };
+let poemId = "";
 
 class BlockEditor extends Component {
 
   constructor(props) {
-
     super(props);
-
     this.state = { };
-    const content = window.localStorage.getItem('content');
+    const content = window.localStorage.getItem('message');
+
 
     if(content) {
+      console.log("Existing Chat");
       this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
     } else {
+      console.log("Empty Chat");
       this.state.editorState = EditorState.createEmpty();
     }
   }
 
   saveContent = debounce((content) => {
     //api call
-    window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
+    window.localStorage.setItem('message', JSON.stringify(convertToRaw(content)));
   }, 2000);
 
   onChange = (editorState) => {
@@ -85,13 +101,69 @@ class BlockEditor extends Component {
   }
 }
 
+
+
 class DocEditor extends Component {
 
-  constructor(props) {
+  checkLogin = () => {
+    
+    axios.get(userRoute1).then((res) => {
+      user1 = res
+      console.log(user1);
+    }).catch(err => {
+      console.log(err);
+    });
+  
+    //temporary get user2
+    axios.get(userRoute2).then((res) => {
+      user2 = res
+      console.log(user2);
+    }).catch(err => {
+      console.log('User 2 not found');
+      console.log(err);
+    });
+  
+    console.log('reached login');
+    axios.post(loginRoute, {username: localStorage.getItem('username'), password: localStorage.getItem('password')})
+    .then(res => {
+        console.log(res);
+    })
+    .catch(err => {
+        console.error(err);
+    });
 
+    console.log("reached create poem")
+    axios.post(poemCreateRoute, {
+      title: "Needs a title!",
+      authors: username1, username2,
+      tags: [],
+      body: ''
+    })
+    .then(res => {
+        console.log(res);
+    })
+    .catch(err => {
+        console.error(err);
+    });
+  }
+  
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('Title was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+
+  constructor(props) {
     super(props);
 
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
     this.state = { };
+    //get existing poem if it exists
     const content = window.localStorage.getItem('content');
 
     if(content) {
@@ -103,6 +175,9 @@ class DocEditor extends Component {
 
   saveContent = debounce((content) => {
     //api call
+    if(content) {
+    console.log('existing poem on local storage');
+    }
     window.localStorage.setItem('content', JSON.stringify(convertToRaw(content)));
   }, 2000);
 
@@ -122,6 +197,8 @@ class DocEditor extends Component {
   }
 
   render() {
+    this.checkLogin();
+
     if (!this.state.editorState) {
       return (
         <h3 className="loading">Loading...</h3>
@@ -171,8 +248,12 @@ class DocEditor extends Component {
             <div class="u-layout-row">
               <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
                 <div class="u-container-layout u-container-layout-1">
-                  <h2 class="u-align-center u-text u-text-default u-text-1">Poem Title <span>with Collaborator's Name</span>
-                  </h2>
+                  <div class="u-align-center u-text u-text-1">
+                  <form onSubmit ={this.handleSubmit}>
+                <input className="rounded border border-white u-align-center" type="username" placeholder="Enter a Poem Title!"
+                           onChange={this.handleChange}/>
+                </form>
+                </div>
                   <p class="u-align-center u-text u-text-2">Feel free to type below. The color you are assigned to is:<br/>
                     <span class="u-text-custom-color-2"></span>
                   </p>
@@ -236,8 +317,8 @@ class DocEditor extends Component {
 	s-7.024,1.065-8.867,3.168c-2.119,2.416-1.935,5.346-1.883,5.864v4.667c-0.568,0.661-0.887,1.502-0.887,2.369v3.545
 	c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816-0.445,1.566-1.162,1.958l-7.907,4.313
 	c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></svg></span>
-                      <h5 class="u-text u-text-default u-text-7">Name</h5>
-                      <p class="u-text u-text-default u-text-8">Description</p>
+                      <h5 class="u-text u-text-default u-text-7">{username1}</h5>
+                      <br/>
                       <h4 class="u-align-center u-text u-text-default u-text-9">Contributor 2:</h4><span class="u-icon u-icon-circle u-text-palette-1-base u-icon-2" data-animation-name="bounceIn" data-animation-duration="1000" data-animation-delay="1000" data-animation-direction=""><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55 55"><use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#svg-77f6"></use></svg><svg class="u-svg-content" viewBox="0 0 55 55" x="0px" y="0px" id="svg-77f6"><path d="M55,27.5C55,12.337,42.663,0,27.5,0S0,12.337,0,27.5c0,8.009,3.444,15.228,8.926,20.258l-0.026,0.023l0.892,0.752
 	c0.058,0.049,0.121,0.089,0.179,0.137c0.474,0.393,0.965,0.766,1.465,1.127c0.162,0.117,0.324,0.234,0.489,0.348
 	c0.534,0.368,1.082,0.717,1.642,1.048c0.122,0.072,0.245,0.142,0.368,0.212c0.613,0.349,1.239,0.678,1.88,0.98
@@ -254,8 +335,7 @@ class DocEditor extends Component {
 	s-7.024,1.065-8.867,3.168c-2.119,2.416-1.935,5.346-1.883,5.864v4.667c-0.568,0.661-0.887,1.502-0.887,2.369v3.545
 	c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816-0.445,1.566-1.162,1.958l-7.907,4.313
 	c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></svg></span>
-                      <h5 class="u-text u-text-default u-text-10">Name</h5>
-                      <p class="u-text u-text-default u-text-11">Description</p>
+                      <h5 class="u-text u-text-default u-text-10">{username2}</h5>
                     </div>
                   </div>
                 </div>

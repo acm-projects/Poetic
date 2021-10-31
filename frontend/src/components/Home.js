@@ -1,16 +1,18 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import PoemScroll from './PoemScroll';
 import axios from 'axios';
+import Main from './Main'
 
 export default function Home(props) {
     const [values, setValues] = useState({
         username: '',
         password: '',
     });
+
     const loginRoute = 'http://localhost:8081/api/authentication/login'
     const signupRoute = 'http://localhost:8081/api/authentication/register'
 
-    
+
     const handleLogin = async (e) => {
         e.preventDefault();
 
@@ -20,11 +22,14 @@ export default function Home(props) {
         axios.post(loginRoute, user)
             .then(res => {
                 console.log(res);
-                props.handleLogInState();
+                props.handleLogInState(true);
             })
             .catch(err => {
                 console.error(err);
             });
+        
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
     };
 
     const handleSignUp = async (e) => {
@@ -36,11 +41,14 @@ export default function Home(props) {
         axios.post(signupRoute, user)
             .then(res => {
                 console.log(res);
-                props.handleLogInState();
+                props.handleLogInState(true);
             })
             .catch(err => {
                 console.error(err);
             });
+
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
     }
 
     const handleChange = name => e => {
@@ -48,8 +56,15 @@ export default function Home(props) {
     };
 
     const handleLoginChanges = (isLoggedIn) => {
+        const username = localStorage.getItem('username'); //needs to be stored to get the local users data later
+
         if (isLoggedIn) {
             return (
+            <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-200">
+                    Currently logged in as:
+                    <div class = "text-5xl text-black text-bold"> 
+                    {username} 
+                    </div>
             <div class="flex gap-4 p-4 bg-red-400 shadow-inner">
             <div class="flex flex-col flex-1">
                 <div class="bg-blue-100 rounded p-2">
@@ -62,6 +77,7 @@ export default function Home(props) {
                     Based on tags
                 </div>
                 <PoemScroll />
+                </div>
             </div>
         </div>
             );
@@ -84,17 +100,8 @@ export default function Home(props) {
                     </button>
                 </form>
             </div>
-            <div className="self-start flex flex-col gap-4 p-6 font-bold text-8xl flex-1 bg-white rounded">
-                <div>
-                Hello
-                </div>
-                <div className="bg-red-50 rounded p-4 font-normal text-6xl">
-                    Here are some words.
-                </div>
-                <div className="text-left text-4xl font-light">
-                    &emsp;These words describe what poetic is blah blah blah
-                </div>
-            </div>
+
+            <Main/>
 
             <PoemScroll/>
         </div>

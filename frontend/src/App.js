@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import './index.css';
 import "tailwindcss/tailwind.css";
 import './App.css';
@@ -10,11 +10,18 @@ const App = () => {
     const [username, setUsername] = useState('');
 
     const handleLogInState = (user) => {
+        if(user) {
         setLoggedIn(true);
         setUsername(user);
+        } else {
+        localStorage.clear();
+        setLoggedIn(false);
+        setUsername("");
+        }
     }
 
     const signOutHandler = () => {
+        localStorage.clear();
         setLoggedIn(false);
         setUsername('');
     }
@@ -26,7 +33,7 @@ const App = () => {
                 <Switch>
                     <Route path="/" exact component={() => <Home handleLogInState={handleLogInState} isLoggedIn={isLoggedIn} />} />
                     <Route path="/collaborate" exact component={() => <Collaborate />} />
-                    <Route path="/editor" exact component={() => <DocEditor />} />
+                    <Route path="/editor" exact component={() => <DocEditor handleLogInState={handleLogInState} isLoggedIn={isLoggedIn} />} />
                     <Route path="/profile" exact component={() => <Profile username={username} />} />
                 </Switch>
             </Router>
