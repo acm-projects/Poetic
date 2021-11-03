@@ -18,6 +18,7 @@ exports.logout = (req, res) => {
  * @param res
  */
 exports.postLogin = (req, res) => {
+    console.log(req.sessionID);
     console.log(req.user);
     res.json(req.user);
 }

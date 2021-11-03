@@ -22,7 +22,9 @@
   },
   "homepage": "https://github.com/acm-projects/Poetic#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^6.0.8",
     "passport": "^0.5.0",

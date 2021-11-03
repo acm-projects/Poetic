@@ -6,16 +6,24 @@ const LocalStrategy = require('passport-local').Strategy;
 const app = express();
 
 var corsOptions = {
-    origin: ['http://localhost:8081','http://localhost:3000']
+    origin: ['http://localhost:8081','http://localhost:3000'],
+    credentials: true
 };
 
+app.use(express.static("public"));
+
 app.use(cors(corsOptions));
+
+const oneSecond = 1000;
+const oneMinute = oneSecond * 60;
+const oneHour = oneMinute * 60
+const oneDay = oneHour * 24;
 
 app.use(session({
     secret: 'acmpoetic',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: { secure: false, maxAge: oneDay }
 }))
 
 app.use((req, res, next) => {
@@ -81,6 +89,10 @@ db.mongoose
 require("./app/routes/poem.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/authentication.routes")(app);
+
+app.get("/user", (req, res) => {
+    res.send(req.user);
+});
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;

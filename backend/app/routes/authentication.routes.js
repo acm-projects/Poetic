@@ -5,8 +5,11 @@ module.exports = app => {
 
     const router = require("express").Router();
 
-    // POST path to logout
-    router.post("/logout", loginController.logout);
+    // GET path to logout
+    router.get("/logout", (req, res) => {
+        req.logout();
+        res.send("Logged out.");
+    });
 
     // POST path to login
     router.post("/login",db.passport.authenticate('local'), loginController.postLogin);
