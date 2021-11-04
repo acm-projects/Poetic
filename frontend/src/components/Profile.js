@@ -1,12 +1,13 @@
-import React from "react";
+import React, {useContext} from "react";
 import Tag from "./Tag";
 import Poem from "./Poem";
+import {myContext} from "../Context";
 
 const Profile = (props) => {
+    const context = useContext(myContext);
     const tagList = []
-    const tagWords = ["haiku", "serious", "funny", "rhyming", "abstract"]
 
-    for (const [index, value] of tagWords.entries()) {
+    for (const [index, value] of context.tags.entries()) {
         tagList.push(<Tag content={value} />)
     }
 
