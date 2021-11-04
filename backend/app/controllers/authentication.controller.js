@@ -14,17 +14,6 @@ exports.logout = (req, res) => {
 
 /**
  * @param req
- * @param req.user
- * @param res
- */
-exports.postLogin = (req, res) => {
-    console.log(req.sessionID);
-    console.log(req.user);
-    res.json(req.user);
-}
-
-/**
- * @param req
  * @param {string} req.body.username
  * @param {string} req.body.password
  * @param {string[]} req.body.tags

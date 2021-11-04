@@ -3,8 +3,11 @@ import PoemScroll from './PoemScroll';
 import axios from 'axios';
 import Main from './Main'
 import {myContext} from "../Context";
+import {useAlert} from "react-alert";
 
 export default function Home() {
+
+    const alert = useAlert();
 
     const context = useContext(myContext);
 
@@ -24,10 +27,18 @@ export default function Home() {
 
         axios.post(loginRoute, user, { withCredentials: true })
             .then(res => {
-                console.log(res);
-                window.location.href = "/";
+                if (res.data === "success") {
+                    console.log("successful!");
+                    window.location.href = "/";
+                } else {
+                    console.log(res);
+                }
+            }, () => {
+                alert.show("Incorrect username or password");
+                console.log("failure");
             })
             .catch(err => {
+                //alert.show(err);
                 console.error(err);
             });
     };
@@ -40,10 +51,15 @@ export default function Home() {
 
         axios.post(signupRoute, user, { withCredentials: true })
             .then(res => {
-                console.log(res);
-                window.location.href = "/";
+                if (res.data.message === "success") {
+                    console.log("successful!");
+                    window.location.href = "/";
+                } else if (res.data.message.includes("already exists")) {
+                    alert.show("That username is already taken.");
+                }
             })
             .catch(err => {
+                //alert.show(err);
                 console.error(err);
             });
     }

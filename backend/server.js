@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
+import cookieParser from 'cookie-parser';
 const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();
@@ -37,6 +38,7 @@ app.use(express.urlencoded({
 
 const db = require("./app/models");
 
+app.use(cookieParser());
 app.use(db.passport.initialize());
 app.use(db.passport.session());
 
@@ -89,10 +91,6 @@ db.mongoose
 require("./app/routes/poem.routes")(app);
 require("./app/routes/user.routes")(app);
 require("./app/routes/authentication.routes")(app);
-
-app.get("/user", (req, res) => {
-    res.send(req.user);
-});
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8081;
