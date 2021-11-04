@@ -1,32 +1,71 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Tag from "./Tag";
 import Poem from "./Poem";
 import {myContext} from "../Context";
+import axios from "axios";
 
 const Profile = (props) => {
     const context = useContext(myContext);
-    const tagList = []
+    const tagList = [];
+
+    const [isLoading, setLoading] = useState(true);
+    const [poems, setPoems] = useState([]);
+
+    const poemByUserRoute = "http://localhost:8081/api/poems/user/" + context.username;
 
     for (const [index, value] of context.tags.entries()) {
         tagList.push(<Tag content={value} />)
     }
 
+    useEffect(() => {
+        axios.get(poemByUserRoute, { withCredentials: true })
+            .then(res => {
+                setPoems(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, []);
+
+    if (isLoading) {
+        return (
+            <div>
+                <div className="flex flex-col gap-4 bg-red-50">
+                    <div className="flex">
+                        <div className="bg-green-50 p-4">
+                            image
+                        </div>
+                        <div className="bg-red-200 text-7xl p-4">
+                            {props.username}
+                        </div>
+                        <div className="flex justify-evenly flex-1 bg-red-100 p-4">
+                            {tagList}
+                        </div>
+                    </div>
+                    <div>Loading Poems...</div>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div>
-            <div class="flex flex-col gap-4 bg-red-50">
-                <div class="flex">
-                    <div class="bg-green-50 p-4">
+            <div className="flex flex-col gap-4 bg-red-50">
+                <div className="flex">
+                    <div className="bg-green-50 p-4">
                         image
                     </div>
-                    <div class="bg-red-200 text-7xl p-4">
+                    <div className="bg-red-200 text-7xl p-4">
                         {props.username}
                     </div>
-                    <div class="flex justify-evenly flex-1 bg-red-100 p-4">
+                    <div className="flex justify-evenly flex-1 bg-red-100 p-4">
                         {tagList}
                     </div>
                 </div>
-                <Poem content="user's content" author="username" />
+                {poems.map(function(poem){
+                    return (<Poem content={poem.body} author={context.username}/>)
+                })}
             </div>
         </div>
     );
