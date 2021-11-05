@@ -15,6 +15,9 @@ module.exports = app => {
     // GET path to find a list of all poems associated with a user by username
     router.get("/user/:username", poemController.findPoemsByUsername);
 
+    // POST path to find all the poems by a bunch of tags
+    router.post("/tags", poemController.findPoemsByTags);
+
     app.use("/api/poems", router)
 }
 

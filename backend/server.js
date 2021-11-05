@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const session = require("express-session");
-import cookieParser from 'cookie-parser';
+const cookieParser = require("cookie-parser");
 const LocalStrategy = require('passport-local').Strategy;
 
 const app = express();

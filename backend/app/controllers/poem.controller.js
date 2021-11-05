@@ -136,3 +136,45 @@ exports.findPoemsByUsername = (req, res) => {
             });
         });
 }
+/**
+ *
+ * @param req
+ * @param {string[]} req.body.tags
+ * @param res
+ */
+exports.findPoemsByTags = (req, res) => {
+    const tags = req.body.tags;
+
+    if (!tags) {
+        res.status(400).send({ message: "Tags cannot be empty."});
+        return;
+    }
+
+    Poem.aggregate([
+            {
+                $addFields: {
+                    matchingElements: { $setIntersection: [ tags, "$tags" ] }
+                }
+            },
+            {
+                $redact: {
+                    $cond: {
+                        if: { $gte:[ { $size:"$matchingElements" }, 1 ] },
+                        then: "$$KEEP",
+                        else: "$$PRUNE"
+                    }
+                }
+            }
+        ])
+        .then(data => {
+            data.sort((a,b) => {
+                return b.tags.length - a.tags.length;
+            });
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Error retrieving poems by overlapping tags."
+            });
+        });
+}
