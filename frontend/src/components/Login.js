@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import PoemScroll from './PoemScroll';
 import axios from 'axios';
+import configData from "../config.json";
 
 export default function Login () {
     const [values, setValues] = useState({
         username: '',
         password: '',
     });
-    const loginRoute = 'http://localhost:8081/api/authentication/login'
+    const loginRoute = configData.SERVER_URL + '/authentication/login'
 
     const handleSubmit = async (e) => {
         e.preventDefault();

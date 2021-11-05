@@ -2,12 +2,13 @@ import React, {useContext} from 'react';
 import { Link, withRouter } from "react-router-dom";
 import {myContext} from "../Context";
 import axios from "axios";
+import configData from "../config.json";
 
 const Navigation = () => {
     const context = useContext(myContext);
 
     const logout = () => {
-        axios.get("http://localhost:8081/api/authentication/logout", { withCredentials: true })
+        axios.get(configData.SERVER_URL + "/authentication/logout", { withCredentials: true })
             .then(res => {
                 console.log(res);
                 window.location.href = "/";

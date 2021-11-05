@@ -3,6 +3,7 @@ import Tag from "./Tag";
 import Poem from "./Poem";
 import {myContext} from "../Context";
 import axios from "axios";
+import configData from "../config.json";
 
 const Profile = (props) => {
     const context = useContext(myContext);
@@ -11,7 +12,7 @@ const Profile = (props) => {
     const [isLoading, setLoading] = useState(true);
     const [poems, setPoems] = useState([]);
 
-    const poemByUserRoute = "http://localhost:8081/api/poems/user/" + context.username;
+    const poemByUserRoute = configData.SERVER_URL + "/poems/user/" + context.username;
 
     for (const [index, value] of context.tags.entries()) {
         tagList.push(<Tag content={value} />)

@@ -4,6 +4,7 @@ import axios from 'axios';
 import Main from './Main'
 import {myContext} from "../Context";
 import {useAlert} from "react-alert";
+import configData from "../config.json";
 
 export default function Home() {
 
@@ -16,8 +17,8 @@ export default function Home() {
         password: '',
     });
 
-    const loginRoute = 'http://localhost:8081/api/authentication/login'
-    const signupRoute = 'http://localhost:8081/api/authentication/register'
+    const loginRoute = configData.SERVER_URL + '/authentication/login';
+    const signupRoute = configData.SERVER_URL + '/authentication/register';
 
     const handleLogin = async (e) => {
         e.preventDefault();
