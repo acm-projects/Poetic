@@ -4,6 +4,7 @@ import Poem from "./Poem";
 import {myContext} from "../Context";
 import axios from "axios";
 import configData from "../config.json";
+import image from "../resources/profileimage.png";
 
 const Profile = (props) => {
     const context = useContext(myContext);
@@ -34,8 +35,8 @@ const Profile = (props) => {
             <div>
                 <div className="flex flex-col gap-4 bg-red-50">
                     <div className="flex">
-                        <div className="bg-green-50 p-4">
-                            image
+                        <div>
+                            <img src={image} alt="Profile logo of pen"/>
                         </div>
                         <div className="bg-red-200 text-7xl p-4">
                             {props.username}
@@ -54,8 +55,8 @@ const Profile = (props) => {
         <div>
             <div className="flex flex-col gap-4 bg-red-50">
                 <div className="flex">
-                    <div className="bg-green-50 p-4">
-                        image
+                    <div>
+                    <img src={image} alt="Profile logo of pen"/>
                     </div>
                     <div className="bg-red-200 text-7xl p-4">
                         {props.username}

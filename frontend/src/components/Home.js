@@ -73,9 +73,9 @@ export default function Home() {
         <div>
             { context ? (
                 <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-200">
-                    Currently logged in as:
+                    
                     <div className="text-5xl text-black text-bold">
-                        {context.username}
+                    Welcome, {context.username}
                     </div>
                     <div className="flex gap-4 p-4 bg-red-400 shadow-inner">
                         <div className="flex flex-col flex-1">
