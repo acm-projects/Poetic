@@ -9,6 +9,12 @@ module.exports = app => {
     // GET path to find all poems
     router.get("/", poemController.findAllPoems);
 
+    // GET path to find all completed poems
+    router.get("/completed", poemController.findAllCompletedPoems);
+
+    // GET path to find all in progress poems
+    router.get("/in_progress", poemController.findAllInProgressPoems);
+
     // GET path to find a specific poem by id
     router.get("/:id", poemController.findPoemById);
 

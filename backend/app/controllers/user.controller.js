@@ -7,9 +7,11 @@ const Poem = db.poems;
  * @param res
  */
 exports.findAllUsers = (req, res) => {
-    User.find()
+    User.aggregate([
+        {
+            $project: { password: 0 }
+        }])
         .then(data => {
-            data.forEach(user => user.password = null);
             console.log(data);
             res.send(data);
         })
@@ -34,13 +36,21 @@ exports.findByUsername = (req, res) => {
         return;
     }
 
-    User.findOne({ username: username })
+    User.aggregate([
+        {
+            $match: { username: username }
+        },
+        {
+            $limit: 1
+        },
+        {
+            $project: { password: 0 }
+        }])
         .then(data => {
-            if (!data) {
+            if (data.empty()) {
                 console.log("No user found with username " + username);
                 res.status(404).send({ message: "No user found with username " + username });
             } else {
-                data.password = null;
                 console.log(data);
                 res.send(data);
             }
@@ -72,9 +82,14 @@ exports.findByPoemId = (req, res) => {
             } else {
                 console.log(poemData.authors);
                 const authors = poemData.authors;
-                User.find({ username: { $in: authors } })
+                User.aggregate([
+                    {
+                        $match: { username : { $in: authors } }
+                    },
+                    {
+                        $project: { password: 0 }
+                    }])
                     .then(data => {
-                        data.forEach(user => user.password = null);
                         console.log(data);
                         res.send(data);
                     })

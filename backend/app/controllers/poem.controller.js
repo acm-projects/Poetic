@@ -8,13 +8,14 @@ const User = db.users;
  * @param {string[]} req.body.authors
  * @param {string[]} req.body.tags
  * @param {string} req.body.body
+ * @param {boolean} req.body.inProgress
  * @param res
  */
 // Create and save a Poem
 exports.createPoem = (req, res) => {
     // Validate request
-    if (!req.body.title) {
-        res.status(400).send({ message: "Contents cannot be empty."});
+    if (!req.body.title || !req.body.authors || !req.body.tags || !req.body.body || !req.body.inProgress) {
+        res.status(400).send({ message: "Contents missing."});
         return;
     }
 
@@ -23,7 +24,8 @@ exports.createPoem = (req, res) => {
         title: req.body.title,
         authors: req.body.authors,
         tags: req.body.tags,
-        body: req.body.body
+        body: req.body.body,
+        inProgress: req.body.inProgress
     });
 
     // Save Poem in the database
@@ -60,6 +62,42 @@ exports.createPoem = (req, res) => {
 // Retrieve all Poems from the database
 exports.findAllPoems = (req, res) => {
     Poem.find()
+        .then(data => {
+            console.log(data);
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving poems."
+            });
+        });
+}
+
+/**
+ * @param req
+ * @param res
+ */
+// Retrieve all Poems from the database
+exports.findAllCompletedPoems = (req, res) => {
+    Poem.find({ inProgress: false })
+        .then(data => {
+            console.log(data);
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving poems."
+            });
+        });
+}
+
+/**
+ * @param req
+ * @param res
+ */
+// Retrieve all Poems from the database
+exports.findAllInProgressPoems = (req, res) => {
+    Poem.find({ inProgress: true })
         .then(data => {
             console.log(data);
             res.send(data);
@@ -159,7 +197,7 @@ exports.findPoemsByTags = (req, res) => {
             {
                 $redact: {
                     $cond: {
-                        if: { $gte:[ { $size:"$matchingElements" }, 1 ] },
+                        if: { $and: [ { $gte:[ { $size:"$matchingElements" }, 1 ] }, { $not: "$inProgress" } ] },
                         then: "$$KEEP",
                         else: "$$PRUNE"
                     }

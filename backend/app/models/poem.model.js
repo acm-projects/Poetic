@@ -6,7 +6,8 @@ module.exports = mongoose => {
                 title: String,
                 authors: [{ type: String }],
                 tags: [{ type: String }],
-                body: String
+                body: String,
+                inProgress: Boolean
             }
         )
     );
