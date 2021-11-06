@@ -13,9 +13,9 @@ const Profile = (props) => {
     const [isLoading, setLoading] = useState(true);
     const [poems, setPoems] = useState([]);
 
-    const poemByUserRoute = configData.SERVER_URL + "/poems/user/" + context.username;
+    const poemByUserRoute = configData.SERVER_URL + "/poems/user/" + props.username;
 
-    for (const [index, value] of context.tags.entries()) {
+    for (const [index, value] of props.tags.entries()) {
         tagList.push(<Tag content={value} />)
     }
 
@@ -53,20 +53,20 @@ const Profile = (props) => {
 
     return (
         <div>
-            <div className="flex flex-col gap-4 bg-red-50">
+            <div className="flex flex-col gap-4 bg-blue-50">
                 <div className="flex">
                     <div>
                     <img src={image} alt="Profile logo of pen"/>
                     </div>
-                    <div className="bg-red-200 text-7xl p-4">
+                    <div className="bg-blue-200 text-7xl p-4">
                         {props.username}
                     </div>
-                    <div className="flex justify-evenly flex-1 bg-red-100 p-4">
+                    <div className="flex justify-evenly flex-1 bg-blue-100 p-4">
                         {tagList}
                     </div>
                 </div>
                 {poems.map(function(poem){
-                    return (<Poem content={poem.body} author={context.username}/>)
+                    return (<Poem content={poem.body} author={props.username}/>)
                 })}
             </div>
         </div>

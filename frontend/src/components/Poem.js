@@ -6,7 +6,7 @@ const Poem = (props) => {
             <div class="flex-1 py-10 hover:underline">
                 {props.content}
             </div>
-            <div class="rounded bg-red-50 flex justify-end px-4">
+            <div class="rounded bg-blue-50 flex justify-end px-4">
                 <div>
                     {props.author}
                 </div>

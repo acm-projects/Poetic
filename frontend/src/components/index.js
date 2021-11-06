@@ -5,3 +5,4 @@ export { default as Create } from "./Create";
 export { default as LoginPage } from "./LoginPage";
 export { default as DocEditor } from "./DocEditor";
 export { default as Profile } from "./Profile";
+export { default as ProfilePage } from "./ProfilePage";

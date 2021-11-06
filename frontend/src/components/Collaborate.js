@@ -27,7 +27,6 @@ const Collaborate = () => {
             )
         }
         else {
-            console.log("here");
             return (
                 <div>
                     {users[currentUser]}
@@ -41,7 +40,7 @@ const Collaborate = () => {
             .then(res => {
                 console.log(res.data);
                 setUsers(res.data.map(function(user){
-                    return (<Profile username={user.username}/>)}));
+                    return (<Profile username={user.username} tags={user.tags}/>)}));
                 setLoading(false);
             })
             .catch(err => {
