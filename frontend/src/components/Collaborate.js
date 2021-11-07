@@ -40,7 +40,7 @@ const Collaborate = () => {
             .then(res => {
                 console.log(res.data);
                 setUsers(res.data.map(function(user){
-                    return (<Profile username={user.username} tags={user.tags}/>)}));
+                    return (<Profile key={user.username} username={user.username} tags={user.tags}/>)}));
                 setLoading(false);
             })
             .catch(err => {
