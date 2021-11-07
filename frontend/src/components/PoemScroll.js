@@ -1,13 +1,12 @@
 import React from "react";
 import Poem from "./Poem";
 
-const PoemScroll = () => {
-    const contentScroll = []
-    const contentWords = ['one', 'two', 'three', 'four', 'five ']
+const PoemScroll = (props) => {
+    const contentScroll = [];
 
-    for (const [index, value] of contentWords.entries()) {
-        contentScroll.push(<Poem content={value} author={index} />)
-    }
+    props.poems.forEach(poem => {
+        contentScroll.push(<Poem content={poem.body} authors={poem.authors} />);
+    });
 
     return (
         <div class="flex flex-col py-5 h-screen overflow-auto gap-4 flex-1">

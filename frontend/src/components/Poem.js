@@ -8,7 +8,7 @@ const Poem = (props) => {
             </div>
             <div class="rounded bg-blue-50 flex justify-end px-4">
                 <div>
-                    {props.author}
+                    {props.authors}
                 </div>
             </div>
         </div>
