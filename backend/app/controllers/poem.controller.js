@@ -216,3 +216,24 @@ exports.findPoemsByTags = (req, res) => {
             });
         });
 }
+
+exports.updatePoemBody = (req, res) => {
+    const addition = req.body.nextLine;
+
+    if (!addition) {
+        res.status(400).send({ message: "Need to have a nextLine." });
+        return;
+    }
+
+    Poem.updateOne(
+        { title: req.body.title },
+        [{ $set: { body: { $concat: [ "$body", "\n", addition ] } } }])
+        .then(res => {
+            console.log(res);
+            res.send(res);
+        })
+        .catch(err => {
+            console.log(err);
+            res.send(err);
+        });
+}
