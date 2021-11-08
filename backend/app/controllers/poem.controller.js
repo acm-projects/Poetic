@@ -35,9 +35,9 @@ exports.createPoem = (req, res) => {
             console.log("Poem saving returned: " + data);
 
             poem.authors.forEach(authorUsername => {
-                User.update(
+                User.updateOne(
                     { username: authorUsername },
-                    { $push: poem.title }
+                    { $push: { poems: poem.title } }
                 ).then(data => {
                     console.log("User updating returned: " + data);
                 }).catch(err => {
