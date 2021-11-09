@@ -13,6 +13,8 @@ const User = db.users;
  */
 // Create and save a Poem
 exports.createPoem = (req, res) => {
+
+    console.log(req);
     // Validate request
     if (!req.body.title || !req.body.authors || !req.body.tags || !req.body.body || !req.body.inProgress) {
         res.status(400).send({ message: "Contents missing."});

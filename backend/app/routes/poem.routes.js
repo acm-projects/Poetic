@@ -4,7 +4,7 @@ module.exports = app => {
     const router = require("express").Router();
 
     // POST path to create a poem (user must be logged in)
-    router.post("/", isAuthenticated, poemController.createPoem);
+    router.post("/", /* isAuthenticated, */poemController.createPoem);
 
     // GET path to find all poems
     router.get("/", poemController.findAllPoems);
@@ -27,6 +27,7 @@ module.exports = app => {
     app.use("/api/poems", router)
 }
 
+/*
 function isAuthenticated(req,res,done) {
     if(req.user) {
         console.log(req.user);
@@ -34,3 +35,4 @@ function isAuthenticated(req,res,done) {
     }
     return res.status(401).send("Error: not logged in.");
 }
+*/
