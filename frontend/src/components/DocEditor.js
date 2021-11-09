@@ -66,7 +66,6 @@ class BlockEditor extends Component {
 
   //Function that handles the end turn button
   handleClick(e) {
-    console.log("You clicked submit.");
     //WIP
   }
 
@@ -131,7 +130,7 @@ class DocEditor extends Component {
       title: localStorage.getItem('title'),
       authors: [this.context.username, username2],
       tags: [],
-      body: localStorage.getItem('content'),
+      body: "",
       inProgress: true,
     })
     .then(res => {
@@ -140,9 +139,8 @@ class DocEditor extends Component {
     .catch(err => {
         console.error(err);
     });
-    } else {
+  }
 
-    }
   }
   
   handleChange(event) {
@@ -192,6 +190,14 @@ class DocEditor extends Component {
   //Function that handles the exit page button
   handleClick(e) {
     console.log("You clicked submit.");
+    axios.post(poemUpdateRoute, {
+      body: convertFromRaw(JSON.parse(localStorage.getItem('content'))),
+    }).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.log(err);
+    })
+
     exit = true;
     //WIP
   }
