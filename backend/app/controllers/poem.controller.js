@@ -37,9 +37,9 @@ exports.createPoem = (req, res) => {
             console.log("Poem saving returned: " + data);
 
             poem.authors.forEach(authorUsername => {
-                User.update(
+                User.updateOne(
                     { username: authorUsername },
-                    { $push: poem.title }
+                    { $push: { poems: poem.title } }
                 ).then(data => {
                     console.log("User updating returned: " + data);
                 }).catch(err => {
@@ -216,5 +216,26 @@ exports.findPoemsByTags = (req, res) => {
             res.status(500).send({
                 message: err.message || "Error retrieving poems by overlapping tags."
             });
+        });
+}
+
+exports.updatePoemBody = (req, res) => {
+    const addition = req.body.nextLine;
+
+    if (!addition) {
+        res.status(400).send({ message: "Need to have a nextLine." });
+        return;
+    }
+
+    Poem.updateOne(
+        { title: req.body.title },
+        [{ $set: { body: { $concat: [ "$body", "\n", addition ] } } }])
+        .then(res => {
+            console.log(res);
+            res.send(res);
+        })
+        .catch(err => {
+            console.log(err);
+            res.send(err);
         });
 }
