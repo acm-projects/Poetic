@@ -219,17 +219,22 @@ exports.findPoemsByTags = (req, res) => {
         });
 }
 
+/**
+ *
+ * @param {string} req.body.title The title of the poem to be updated
+ * @param {string} req.body.newBody The new body of the poem (add your changes on the frontend and send the whole new body)
+ * @param res
+ */
 exports.updatePoemBody = (req, res) => {
-    const addition = req.body.nextLine;
 
-    if (!addition) {
-        res.status(400).send({ message: "Need to have a nextLine." });
+    if (!req.body.newBody || !req.body.title) {
+        res.status(400).send({ message: "Need to have a newBody and title." });
         return;
     }
 
     Poem.updateOne(
         { title: req.body.title },
-        [{ $set: { body: { $concat: [ "$body", "\n", addition ] } } }])
+        [{ $set: { body: req.body.newBody } }])
         .then(res => {
             console.log(res);
             res.send(res);
