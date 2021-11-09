@@ -11,7 +11,7 @@ import 'draft-js/dist/Draft.css';
 import axios from 'axios';
 import { ClientRequest } from 'http';
 import { Redirect } from 'react-router';
-import { removeListener } from 'process';
+import { removeListener, title } from 'process';
 import {useLocation} from "react-router-dom";
 
 /*
@@ -113,7 +113,7 @@ const DocEditor = () => {
   const location = useLocation();
   const context = useContext(myContext);
 
-  username2 = location.state.matchedUser;
+  (location.state) ? username2 =location.state.matchedUser : username2 = "unknown"
 
   let submitButton;
 
@@ -146,6 +146,7 @@ const DocEditor = () => {
     }
   }, []);
 
+
   const onChange = (editorState) => {
     setEditorState(editorState);
     const contentState = editorState.getCurrentContent();
@@ -156,8 +157,14 @@ const DocEditor = () => {
   //Function that handles the exit page button
   const handleClick = (e) => {
     console.log("You clicked submit.");
+    console.log(localStorage.getItem('title'))
+    const content = editorState.getCurrentContent().getPlainText('\u000A')
+
+    console.log(content)
+
     axios.post(poemUpdateRoute, {
-      body: convertFromRaw(JSON.parse(localStorage.getItem('content'))),
+      title: localStorage.getItem('title'),
+      nextLine: (content) ?  content : "needs some text!",
     }).then(res => {
       console.log(res);
     }).catch(err => {
@@ -178,14 +185,14 @@ const DocEditor = () => {
 
   if(username2 != "unknown") {
     if(exit) {
-      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>Submit Poem &lt;1/2&gt;</button>
+      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;1/2&gt;</button>
     }
     else {
-      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>Submit Poem &lt;0/2&gt;</button>
+      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;0/2&gt;</button>
     }
   }
   else {
-    submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>Submit Poem</button>
+    submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem</button>
   }
 
   if (!editorState) {
