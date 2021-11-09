@@ -1,6 +1,7 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import { EditorState, Editor, convertToRaw, convertFromRaw } from 'draft-js';
 import debounce from 'lodash/debounce'
+import {myContext} from "../Context";
 /*
 import PropTypes from 'prop-types';
 import { BlockPicker } from 'react-color';
@@ -9,6 +10,8 @@ import { EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
 import { ClientRequest } from 'http';
+import { Redirect } from 'react-router';
+import { removeListener } from 'process';
 
 /*
 function myBlockStyleFn(contentBlock) {
@@ -21,16 +24,14 @@ Strech Goal: change doc editor visuals when it is available
 */
 
 const poemCreateRoute = 'http://localhost:8081/api/poems/'
-const loginRoute = 'http://localhost:8081/api/authentication/login'
+const poemUpdateRoute = 'http://localhost:8081/api/poems/update'
 
 //get user names of two users (user 2 will be found using matching algorithm)
-const username1 = localStorage.getItem('username');
-const userRoute1 = "http://localhost:8081/api/users/username/" + username1;
-const username2 = "unknown";
-const userRoute2 = "http://localhost:8081/api/users/username/" + username2;
-let user1 = { };
-let user2 = { };
-let poemId = "";
+const username2 = "sample";
+localStorage.setItem('title', "example title");
+
+let exit = false;
+
 
 class BlockEditor extends Component {
 
@@ -76,6 +77,13 @@ class BlockEditor extends Component {
       );
     }
 
+    let button;
+    if (username2 != "unknown") {
+      button = <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>End Turn</button>
+    } else {
+      //return nothing
+    }
+
     return (
       <div class="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500" data-animation-direction="">
                     <div class="u-container-layout u-container-layout-2 h-3/6">
@@ -95,7 +103,7 @@ class BlockEditor extends Component {
                   }}
                   />
                   </div>
-                  <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>End Turn</button>
+                  {button}
                   </div>
     )
   }
@@ -104,40 +112,27 @@ class BlockEditor extends Component {
 
 
 class DocEditor extends Component {
+  static contextType = myContext;
 
   checkLogin = () => {
-    
-    axios.get(userRoute1).then((res) => {
-      user1 = res
-      console.log(user1);
-    }).catch(err => {
-      console.log(err);
-    });
-  
-    //temporary get user2
-    axios.get(userRoute2).then((res) => {
-      user2 = res
-      console.log(user2);
-    }).catch(err => {
-      console.log('User 2 not found');
-      console.log(err);
-    });
-  
-    console.log('reached login');
-    axios.post(loginRoute, {username: localStorage.getItem('username'), password: localStorage.getItem('password')})
-    .then(res => {
-        console.log(res);
-    })
-    .catch(err => {
-        console.error(err);
-    });
+    const content = window.localStorage.getItem('content');
 
-    console.log("reached create poem")
+    if(this.context) {
+      console.log("Logged in");
+    } else {
+      return(
+      <Redirect to= "/" />
+      )
+    }
+   
+    if(!content) {
+      console.log("reached create poem");
     axios.post(poemCreateRoute, {
-      title: "Needs a title!",
-      authors: username1, username2,
+      title: localStorage.getItem('title'),
+      authors: [this.context.username, username2],
       tags: [],
-      body: ''
+      body: localStorage.getItem('content'),
+      inProgress: true,
     })
     .then(res => {
         console.log(res);
@@ -145,6 +140,9 @@ class DocEditor extends Component {
     .catch(err => {
         console.error(err);
     });
+    } else {
+
+    }
   }
   
   handleChange(event) {
@@ -153,6 +151,7 @@ class DocEditor extends Component {
 
   handleSubmit(event) {
     alert('Title was submitted: ' + this.state.value);
+    localStorage.setItem('title', this.state.value);
     event.preventDefault();
   }
 
@@ -190,14 +189,29 @@ class DocEditor extends Component {
     });
   }
 
-  //Function that handles the end turn button
+  //Function that handles the exit page button
   handleClick(e) {
     console.log("You clicked submit.");
+    exit = true;
     //WIP
   }
 
   render() {
     this.checkLogin();
+
+    let submitButton;
+
+    if(username2 != "unknown") {
+      if(exit) {
+        submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>Submit Poem &lt;1/2&gt;</button>
+      }
+      else {
+        submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>Submit Poem &lt;0/2&gt;</button>
+      }
+    }
+    else {
+      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>Submit Poem</button>
+    }
 
     if (!this.state.editorState) {
       return (
@@ -205,6 +219,7 @@ class DocEditor extends Component {
       );
     }
 
+    if(username2 != "unknown") {
     return (
         <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
         <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
@@ -317,7 +332,7 @@ class DocEditor extends Component {
 	s-7.024,1.065-8.867,3.168c-2.119,2.416-1.935,5.346-1.883,5.864v4.667c-0.568,0.661-0.887,1.502-0.887,2.369v3.545
 	c0,1.101,0.494,2.128,1.34,2.821c0.81,3.173,2.477,5.575,3.093,6.389v2.894c0,0.816-0.445,1.566-1.162,1.958l-7.907,4.313
 	c-0.252,0.137-0.502,0.297-0.752,0.476C5.276,41.792,2,35.022,2,27.5z"></path></svg></span>
-                      <h5 class="u-text u-text-default u-text-7">{username1}</h5>
+                      <h5 class="u-text u-text-default u-text-7">{this.context.username}</h5>
                       <br/>
                       <h4 class="u-align-center u-text u-text-default u-text-9">Contributor 2:</h4><span class="u-icon u-icon-circle u-text-palette-1-base u-icon-2" data-animation-name="bounceIn" data-animation-duration="1000" data-animation-delay="1000" data-animation-direction=""><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 55 55"><use xmlnsXlink="http://www.w3.org/1999/xlink" xlinkHref="#svg-77f6"></use></svg><svg class="u-svg-content" viewBox="0 0 55 55" x="0px" y="0px" id="svg-77f6"><path d="M55,27.5C55,12.337,42.663,0,27.5,0S0,12.337,0,27.5c0,8.009,3.444,15.228,8.926,20.258l-0.026,0.023l0.892,0.752
 	c0.058,0.049,0.121,0.089,0.179,0.137c0.474,0.393,0.965,0.766,1.465,1.127c0.162,0.117,0.324,0.234,0.489,0.348
@@ -343,12 +358,80 @@ class DocEditor extends Component {
             </div>
           </div>
         </div>
-        <a href="https://github.com/acm-projects/Poetic" class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2">Submit Poem &lt;1/2&gt;</a>
+
       </div>
     </section>
+    {submitButton}
         </div>
     </div>
     );    
+  } 
+  else {
+      return (
+        <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
+        <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
+        <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
+          <div class="menu-collapse">
+            <a class="place-self-auto u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-text-hover-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+              <defs><symbol id="menu-hamburger" viewBox="0 0 16 16"><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+</symbol>
+</defs>
+            </a>
+          </div>
+          <div class="u-nav container">
+            <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-custom-color-7 u-text-hover-custom-color-2" href="Home.html">Home</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-custom-color-7 u-text-hover-custom-color-2" href="Create-Poem.html">Create Poem</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-custom-color-7 u-text-hover-custom-color-2" href="Collaborate.html">Collaborate</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-custom-color-7 u-text-hover-custom-color-2" href="Profile.html">Profile</a>
+</li></ul>
+          </div>
+          <div class="u-custom-menu u-nav-container-collapse">
+            <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+              <div class="u-inner-container-layout u-sidenav-overflow">
+                <div class="u-menu-close"></div>
+                <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2 p-px"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Home.html">Home</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Create-Poem.html">Create Poem</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Collaborate.html">Collaborate</a>
+</li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Profile.html">Profile</a>
+</li></ul>
+              </div>
+            </div>
+            <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+          </div>
+        </nav>
+      </div>
+
+      <div class="place-self-auto u-align-center">
+        <section class="u-clearfix u-section-1" id="sec-05a1">
+      <div class="u-clearfix u-sheet u-sheet-1 u-align-center" >
+        <div class="u-clearfix u-expanded-width u-gutter-0 u-layout-wrap u-layout-wrap-1">
+          <div class="u-layout">
+            <div class="u-layout-row">
+              <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
+                <div class="u-container-layout u-container-layout-1">
+                  <div class="u-align-center u-text u-text-1">
+                  <form onSubmit ={this.handleSubmit}>
+                <input className="rounded border border-white u-align-center" type="username" placeholder="Enter a Poem Title!"
+                           onChange={this.handleChange}/>
+                </form>
+                </div>
+                  <p class="u-align-center u-text u-text-2">Feel free to type below! You are currently editing solo<br/>
+                    <span class="u-text-custom-color-2"></span>
+                  </p>
+                <BlockEditor/>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            </div>
+            </section>
+            {submitButton}
+          </div>
+    </div>
+
+    );
   }
+}
 }
 export default DocEditor;
