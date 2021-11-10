@@ -72,13 +72,13 @@ const Collaborate = () => {
     }
 
     return (
-        <div class="flex flex-col py-5 h-screen overflow-auto gap-4 flex-1">
+        <div class="flex flex-col py-10 px-20 h-screen overflow-auto gap-4 flex-1">
             <div>
             {displayUser(loading)}
             </div>
-            <div class="flex justify-evenly">
-                <button class="bg-green-100 rounded p-4 hover:bg-green-200" onClick={createWithUser}>Yes</button>
-                <button class="bg-red-100 rounded p-4 hover:bg-red-200" onClick={nextMatch}>No</button>
+            <div class="flex justify-evenly bg-gray-50 p-4 rounded">
+                <button class="bg-green-100 rounded p-4 hover:bg-green-200" onClick={createWithUser}>Match</button>
+                <button class="bg-red-100 rounded p-4 hover:bg-red-200" onClick={nextMatch}>Next</button>
             </div>
         </div>
     )

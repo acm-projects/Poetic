@@ -10,6 +10,7 @@ export default function Home() {
 
     const [isLoading, setLoading] = useState(true);
     const [poemsByTags, setPoemsByTags] = useState([]);
+    const [allPoems, setAllPoems] = useState([]);
 
     useEffect(() => {
         if (context) {
@@ -25,9 +26,18 @@ export default function Home() {
                 });
         }
 
-    }, [])
+        // Needs to be changed to completed poems, but there are no completed poems yet
+        axios.get(configData.SERVER_URL + "/poems/")
+            .then(res => {
+                console.log("Retrieving poems");
+                console.log(res.data);
+                setAllPoems(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
 
-    const poems = [];
+    }, [])
 
     const alert = useAlert();
 
@@ -109,7 +119,7 @@ export default function Home() {
                                 <div className="bg-blue-100 rounded p-2">
                                     Popular
                                 </div>
-                                <PoemScroll poems={poems}/>
+                                <PoemScroll poems={allPoems}/>
                             </div>
                             <div className="flex flex-col flex-1">
                                 <div className="bg-green-100 rounded p-2">
@@ -122,7 +132,6 @@ export default function Home() {
                 ) : (
                     <div className="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
                         <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
-                            <h2>Login</h2>
                             <form className="flex flex-col gap-4">
                                 <input className="rounded border border-white" type="username" placeholder="Name"
                                        onChange={handleChange('username')}/>
@@ -139,7 +148,7 @@ export default function Home() {
 
                         <Main/>
 
-                        <PoemScroll poems={poems}/>
+                        <PoemScroll poems={allPoems}/>
                     </div>
                 )
                 }
@@ -150,21 +159,21 @@ export default function Home() {
     return (
         <div>
             { context ? (
-                <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-200">
+                <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold py-10 px-20 bg-blue-200">
                     Currently logged in as:
                     <div className="text-5xl text-black text-bold">
                         {context.username}
                     </div>
-                    <div className="flex gap-4 p-4 bg-red-400 shadow-inner">
-                        <div className="flex flex-col flex-1">
-                            <div className="bg-blue-100 rounded p-2">
-                                Popular
+                    <div className="flex gap-4 p-4 bg-blue-400 overflow-auto h-screen shadow-inner rounded">
+                        <div className="flex flex-col flex-1 gap-4">
+                            <div className="bg-red-100 rounded p-2">
+                                Browse
                             </div>
-                            <PoemScroll poems={poems}/>
+                            <PoemScroll poems={allPoems}/>
                         </div>
                         <div className="flex flex-col flex-1">
                             <div className="bg-green-100 rounded p-2">
-                                Based on tags
+                                Based on your tags
                             </div>
                             <PoemScroll poems={poemsByTags}/>
                         </div>
@@ -190,7 +199,7 @@ export default function Home() {
 
                     <Main/>
 
-                    <PoemScroll poems={poems}/>
+                    <PoemScroll poems={allPoems}/>
                 </div>
             )
             }
