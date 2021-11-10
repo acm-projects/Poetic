@@ -1,15 +1,8 @@
-import React, {Component, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { EditorState, Editor, convertToRaw, convertFromRaw } from 'draft-js';
-import debounce from 'lodash/debounce'
 import {myContext} from "../Context";
-/*
-import PropTypes from 'prop-types';
-import { BlockPicker } from 'react-color';
-import { EditorState } from 'draft-js';
-*/
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
-import { removeListener, title } from 'process';
 import {useLocation} from "react-router-dom";
 
 /*
@@ -29,9 +22,11 @@ const poemUpdateRoute = 'http://localhost:8081/api/poems/update'
 let username2 = "sample";
 localStorage.setItem('title', "example title");
 
+let workInProgress = false;
+
 let exit = false;
 
-const BlockEditor = () => {
+const BlockEditor = (props) => {
   const [editorState, setEditorState] = useState();
 
   useEffect(() => {
@@ -51,7 +46,14 @@ const BlockEditor = () => {
     console.log('editor state', editorState);
     const contentState = editorState.getCurrentContent();
     console.log('content state', convertToRaw(contentState));
-    window.localStorage.setItem('message', JSON.stringify(convertToRaw(contentState)))
+    console.log('message', JSON.stringify(convertToRaw(contentState)));
+    let fullText = "";
+    convertToRaw(contentState).blocks.forEach(block => {
+      fullText += block.text + '\n';
+    });
+    props.onChange(fullText);
+    console.log(fullText);
+    window.localStorage.setItem('message', JSON.stringify(convertToRaw(contentState)));
   }
 
   if (!editorState) {
@@ -115,13 +117,24 @@ const DocEditor = () => {
   const location = useLocation();
   const context = useContext(myContext);
 
-  (location.state) ? username2 = location.state.matchedUser : username2 = "unknown"
+  let previousTitle = "";
+
+  if (location.state) {
+    username2 = location.state.matchedUser;
+    workInProgress = location.state.inProgress;
+    if (workInProgress) {
+      previousTitle = location.state.previousTitle;
+    }
+  } else {
+    username2 = "unknown";
+    workInProgress = false;
+  }
 
   let submitButton;
 
   const [editorState, setEditorState] = useState();
 
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState(previousTitle);
 
   const [values, setValues] = useState({
     title: "",
@@ -133,15 +146,6 @@ const DocEditor = () => {
 
   const handleValueChange = (e) => {
     setValues({ [e.target.name]: e.target.value });
-  };
-
-  
-  const handleTitleChange = (e) => {
-    setTitle({ [e.target.name]: e.target.value });
-
-    //this is a temporary line that is horribly written, and makes this only work with title
-    localStorage.setItem('title', e.target.value)
-    console.log(e.target.value)
   };
 
   const handleEditorStateChange = (state) => {
@@ -196,19 +200,49 @@ const DocEditor = () => {
     event.preventDefault();
   }
 
+  const handlePoemUpdate = () => {
+    console.log("going to update this poem:");
+    console.log("title=" + title);
+    console.log("values=");
+    console.log(values);
+  }
+
+  const handlePoemSubmission = () => {
+    console.log("going to submit this poem:");
+    console.log("title=" + title);
+    console.log("values=");
+    console.log(values);
+  }
+
+  const handleBlockEditorChange = (textOutput) => {
+    setValues({ ...values, body: textOutput });
+  }
+
+  if (workInProgress) {
+    submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1"
+                           onClick={handlePoemUpdate}>
+                     Update Poem
+                   </button>
+  } else {
+    submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1"
+                           onClick={handlePoemSubmission}>
+                     Submit Poem
+                   </button>
+  }
 
 
-  if(username2 != "unknown") {
-    if(exit) {
-      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;1/2&gt;</button>
-    }
-    else {
-      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;0/2&gt;</button>
-    }
-  }
-  else {
-    submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem</button>
-  }
+
+  // if(username2 != "unknown") {
+  //   if(exit) {
+  //     submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;1/2&gt;</button>
+  //   }
+  //   else {
+  //     submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;0/2&gt;</button>
+  //   }
+  // }
+  // else {
+  //   submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem</button>
+  // }
 
   if (!editorState) {
     return (
@@ -261,9 +295,9 @@ const DocEditor = () => {
                       <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
-                            <form onSubmit ={handleSubmit}>
-                              <input className="rounded border border-white u-align-center" /*value = {values.title}*/ placeholder="Enter a Poem Title!"
-                                     onChange = {e => handleTitleChange(e)}/>
+                            <form onSubmit ={e => handleSubmit(e)}>
+                              <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
+                                     onChange={handleValueChange('title')}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below. The color you are assigned to is:<br/>
@@ -303,7 +337,7 @@ const DocEditor = () => {
                                   history: { inDropdown: true },
                                 }}
                             />
-                            <BlockEditor/>
+                            <BlockEditor onChange={handleBlockEditorChange}/>
                           </div>
                         </div>
                       </div>
@@ -407,14 +441,14 @@ const DocEditor = () => {
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
                             <form onSubmit ={handleSubmit}>
-                              <input className="rounded border border-white u-align-center" /*value = {values.title}*/ type="username" placeholder="Enter a Poem Title!"
-                                     onChange={e => handleTitleChange(e)}/>
+                              <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
+                                     onChange={handleValueChange('title')}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below! You are currently editing solo<br/>
                             <span class="u-text-custom-color-2"></span>
                           </p>
-                          <BlockEditor/>
+                          <BlockEditor onChange={handleBlockEditorChange}/>
                         </div>
                       </div>
                     </div>
