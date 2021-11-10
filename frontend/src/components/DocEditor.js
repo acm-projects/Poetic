@@ -113,7 +113,7 @@ const DocEditor = () => {
   const location = useLocation();
   const context = useContext(myContext);
 
-  (location.state) ? username2 =location.state.matchedUser : username2 = "unknown"
+  (location.state) ? username2 = location.state.matchedUser : username2 = "unknown"
 
   let submitButton;
 
@@ -158,13 +158,13 @@ const DocEditor = () => {
   const handleClick = (e) => {
     console.log("You clicked submit.");
     console.log(localStorage.getItem('title'))
-    const content = editorState.getCurrentContent().getPlainText('\u000A')
+    const content = editorState.getCurrentContent().getPlainText()
 
     console.log(content)
 
     axios.post(poemUpdateRoute, {
       title: localStorage.getItem('title'),
-      nextLine: (content) ?  content : "needs some text!",
+      newBody: (content) ?  content : "needs some text!",
     }).then(res => {
       console.log(res);
     }).catch(err => {
