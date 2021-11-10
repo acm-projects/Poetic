@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect, useContext} from "react";
 import Profile from "./Profile";
 import axios from "axios";
 import configData from "../config.json";
 import {useHistory} from "react-router-dom";
+import {myContext} from "../Context";
 
 const Collaborate = () => {
     const allUsersRoute = configData.SERVER_URL + "/users/";
@@ -10,6 +11,8 @@ const Collaborate = () => {
     const [users, setUsers] = useState([]);
     const [usersPoemTags, setUsersPoemTags] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const context = useContext(myContext);
 
     const history = useHistory();
 
@@ -41,6 +44,12 @@ const Collaborate = () => {
         axios.get(allUsersRoute, { withCredentials: true })
             .then(res => {
                 console.log(res.data);
+                for (let i = 0; i < res.data.length; i++) {
+                    if (res.data[i].username == context.username) {
+                        res.data.splice(i, 1);
+                        break;
+                    }
+                }
                 setUsers(res.data);
                 setUsersPoemTags(res.data.map(function(user){
                     return (<Profile key={user.username} username={user.username} tags={user.tags}/>)}));
