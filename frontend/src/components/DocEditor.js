@@ -26,7 +26,7 @@ let workInProgress = false;
 
 let exit = false;
 
-const BlockEditor = () => {
+const BlockEditor = (props) => {
   const [editorState, setEditorState] = useState();
 
   useEffect(() => {
@@ -46,7 +46,14 @@ const BlockEditor = () => {
     console.log('editor state', editorState);
     const contentState = editorState.getCurrentContent();
     console.log('content state', convertToRaw(contentState));
-    window.localStorage.setItem('message', JSON.stringify(convertToRaw(contentState)))
+    console.log('message', JSON.stringify(convertToRaw(contentState)));
+    let fullText = "";
+    convertToRaw(contentState).blocks.forEach(block => {
+      fullText += block.text + '\n';
+    });
+    props.onChange(fullText);
+    console.log(fullText);
+    window.localStorage.setItem('message', JSON.stringify(convertToRaw(contentState)));
   }
 
   if (!editorState) {
@@ -145,10 +152,6 @@ const DocEditor = () => {
     setEditorState(state);
   }
 
-  const handleTitleChange = (state) => {
-    setTitle(state);
-  }
-
   useEffect(() => {
     if (!context) {
       window.location.href = "/";
@@ -210,6 +213,10 @@ const DocEditor = () => {
     console.log("title=" + title);
     console.log("values=");
     console.log(values);
+  }
+
+  const handleBlockEditorChange = (textOutput) => {
+    setValues({ ...values, body: textOutput });
   }
 
   if (workInProgress) {
@@ -290,8 +297,8 @@ const DocEditor = () => {
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
                             <form onSubmit ={e => handleSubmit(e)}>
-                              <input className="rounded border border-white u-align-center" type="title" placeholder="Enter a Poem Title!" value = {title}
-                                     onChange={e => handleTitleChange(e)}/>
+                              <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
+                                     onChange={handleValueChange('title')}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below. The color you are assigned to is:<br/>
@@ -331,7 +338,7 @@ const DocEditor = () => {
                                   history: { inDropdown: true },
                                 }}
                             />
-                            <BlockEditor/>
+                            <BlockEditor onChange={handleBlockEditorChange}/>
                           </div>
                         </div>
                       </div>
@@ -435,14 +442,14 @@ const DocEditor = () => {
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
                             <form onSubmit ={handleSubmit}>
-                              <input className="rounded border border-white u-align-center" type="username" placeholder="Enter a Poem Title!"
-                                     onChange={handleValueChange}/>
+                              <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
+                                     onChange={handleValueChange('title')}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below! You are currently editing solo<br/>
                             <span class="u-text-custom-color-2"></span>
                           </p>
-                          <BlockEditor/>
+                          <BlockEditor onChange={handleBlockEditorChange}/>
                         </div>
                       </div>
                     </div>
