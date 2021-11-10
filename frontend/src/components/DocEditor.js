@@ -37,8 +37,8 @@ const BlockEditor = () => {
   const [editorState, setEditorState] = useState();
 
   useEffect(() => {
-    if (window.localStorage.getItem('content')) {
-      handleEditorStateChange(EditorState.createWithContent(convertFromRaw(JSON.parse(window.localStorage.getItem('content')))));
+    if (window.localStorage.getItem('message')) {
+      handleEditorStateChange(EditorState.createWithContent(convertFromRaw(JSON.parse(window.localStorage.getItem('message')))));
     } else {
       handleEditorStateChange(EditorState.createEmpty());
     }
@@ -53,19 +53,7 @@ const BlockEditor = () => {
     console.log('editor state', editorState);
     const contentState = editorState.getCurrentContent();
     console.log('content state', convertToRaw(contentState));
-<<<<<<< HEAD
-    this.saveContent(contentState);
-    this.setState({
-      editorState,
-    });
-  }
-
-  //Function that handles the end turn button
-  handleClick(e) {
-    //WIP
-=======
-    window.localStorage.setItem('content', JSON.stringify(convertToRaw(contentState)))
->>>>>>> dab71e0d3ad5028ce70e357405779df523341c64
+    window.localStorage.setItem('message', JSON.stringify(convertToRaw(contentState)))
   }
 
   if (!editorState) {
@@ -74,9 +62,29 @@ const BlockEditor = () => {
     );
   }
 
+  //handles the end turn button
+  const handleTurn = (e) => {
+    console.log("You clicked submit.");
+    console.log(localStorage.getItem('title'))
+    const content = editorState.getCurrentContent().getPlainText()
+    window.localStorage.setItem('poemContent', content);
+
+    console.log(content)
+
+    axios.post(poemUpdateRoute, {
+      title: localStorage.getItem('title'),
+      newBody: (content) ?  content : "needs some text!",
+    }).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.log(err);
+    })
+    //WIP
+  }
+
   let button;
   if (username2 != "unknown") {
-    button = <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>End Turn</button>
+    button = <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleTurn()}>End Turn</button>
   } else {
     //return nothing
   }
@@ -115,6 +123,8 @@ const DocEditor = () => {
 
   const [editorState, setEditorState] = useState();
 
+  const [title, setTitle] = useState();
+
   const [values, setValues] = useState({
     title: "",
     authors: [context.username, ""],
@@ -129,6 +139,10 @@ const DocEditor = () => {
 
   const handleEditorStateChange = (state) => {
     setEditorState(state);
+  }
+
+  const handleTitleChange = (state) => {
+    setTitle(state);
   }
 
   useEffect(() => {
@@ -153,12 +167,13 @@ const DocEditor = () => {
 
   //Function that handles the exit page button
   const handleClick = (e) => {
-    console.log("You clicked submit.");
+    console.log("You clicked final submit.");
     console.log(localStorage.getItem('title'))
-    const content = editorState.getCurrentContent().getPlainText()
-
+    const content = localStorage.getItem('poemContent');
     console.log(content)
 
+
+    //need to update call to finalize poem. Also it saves the message contents and not the poem contents
     axios.post(poemUpdateRoute, {
       title: localStorage.getItem('title'),
       newBody: (content) ?  content : "needs some text!",
@@ -173,6 +188,7 @@ const DocEditor = () => {
   }
 
   const handleSubmit = (event) => {
+    console.log(title)
     alert('Title was submitted: ' + values.title);
     localStorage.setItem('title', values.title);
     event.preventDefault();
@@ -243,9 +259,9 @@ const DocEditor = () => {
                       <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
-                            <form onSubmit ={handleSubmit}>
-                              <input className="rounded border border-white u-align-center" type="username" placeholder="Enter a Poem Title!"
-                                     onChange={handleValueChange}/>
+                            <form onSubmit ={e => handleSubmit(e)}>
+                              <input className="rounded border border-white u-align-center" type="title" placeholder="Enter a Poem Title!" value = {title}
+                                     onChange={e => handleTitleChange(e)}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below. The color you are assigned to is:<br/>
