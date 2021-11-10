@@ -33,81 +33,64 @@ localStorage.setItem('title', "example title");
 
 let exit = false;
 
+const BlockEditor = () => {
+  const [editorState, setEditorState] = useState();
 
-class BlockEditor extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = { };
-    const content = window.localStorage.getItem('message');
-
-
-    if(content) {
-      console.log("Existing Chat");
-      this.state.editorState = EditorState.createWithContent(convertFromRaw(JSON.parse(content)));
+  useEffect(() => {
+    if (window.localStorage.getItem('content')) {
+      handleEditorStateChange(EditorState.createWithContent(convertFromRaw(JSON.parse(window.localStorage.getItem('content')))));
     } else {
-      console.log("Empty Chat");
-      this.state.editorState = EditorState.createEmpty();
+      handleEditorStateChange(EditorState.createEmpty());
     }
+  }, []);
+
+  const handleEditorStateChange = (state) => {
+    setEditorState(state);
   }
 
-  saveContent = debounce((content) => {
-    //api call
-    window.localStorage.setItem('message', JSON.stringify(convertToRaw(content)));
-  }, 2000);
-
-  onChange = (editorState) => {
+  const onChange = (editorState) => {
+    setEditorState(editorState);
+    console.log('editor state', editorState);
     const contentState = editorState.getCurrentContent();
     console.log('content state', convertToRaw(contentState));
-    this.saveContent(contentState);
-    this.setState({
-      editorState,
-    });
+    window.localStorage.setItem('content', JSON.stringify(convertToRaw(contentState)))
   }
 
-  //Function that handles the end turn button
-  handleClick(e) {
-    console.log("You clicked submit.");
-    //WIP
-  }
-
-  render() {
-    if (!this.state.editorState) {
-      return (
-        <h3 className="loading">Loading...</h3>
-      );
-    }
-
-    let button;
-    if (username2 != "unknown") {
-      button = <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>End Turn</button>
-    } else {
-      //return nothing
-    }
-
+  if (!editorState) {
     return (
-      <div class="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500" data-animation-direction="">
-                    <div class="u-container-layout u-container-layout-2 h-3/6">
-                    <Editor
-                  editorState ={this.state.editorState}
-                  onChange={this.onChange}
-                  toolbarHidden
-                  wrapperClassName="wrapper-class"
-                  editorClassName="editor-class"
-                  toolbarClassName="toolbar-class"
-                  toolbar={{
-                      inline: { inDropdown: true },
-                        list: { inDropdown: true },
-                      textAlign: { inDropdown: true },
-                      link: { inDropdown: true },
-                  history: { inDropdown: true },
-                  }}
-                  />
-                  </div>
-                  {button}
-                  </div>
-    )
+        <h3 className="loading">Loading...</h3>
+    );
   }
+
+  let button;
+  if (username2 != "unknown") {
+    button = <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => this.handleClick()}>End Turn</button>
+  } else {
+    //return nothing
+  }
+
+  return (
+      <div class="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500" data-animation-direction="">
+        <div class="u-container-layout u-container-layout-2 h-3/6">
+          <Editor
+              editorState ={editorState}
+              onChange={onChange}
+              toolbarHidden
+              wrapperClassName="wrapper-class"
+              editorClassName="editor-class"
+              toolbarClassName="toolbar-class"
+              toolbar={{
+                inline: { inDropdown: true },
+                list: { inDropdown: true },
+                textAlign: { inDropdown: true },
+                link: { inDropdown: true },
+                history: { inDropdown: true },
+              }}
+          />
+        </div>
+        {button}
+      </div>
+  )
 }
 
 const DocEditor = () => {
@@ -149,6 +132,7 @@ const DocEditor = () => {
 
   const onChange = (editorState) => {
     setEditorState(editorState);
+    console.log('editor state', editorState);
     const contentState = editorState.getCurrentContent();
     console.log('content state', convertToRaw(contentState));
     window.localStorage.setItem('content', JSON.stringify(convertToRaw(contentState)))
