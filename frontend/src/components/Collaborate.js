@@ -66,6 +66,7 @@ const Collaborate = () => {
             pathname: "/editor",
             state: {
                 matchedUser: users[currentUser].username,
+                inProgress: false
             },
         });
     }

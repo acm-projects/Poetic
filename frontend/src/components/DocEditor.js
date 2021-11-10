@@ -1,17 +1,8 @@
-import React, {Component, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { EditorState, Editor, convertToRaw, convertFromRaw } from 'draft-js';
-import debounce from 'lodash/debounce'
 import {myContext} from "../Context";
-/*
-import PropTypes from 'prop-types';
-import { BlockPicker } from 'react-color';
-import { EditorState } from 'draft-js';
-*/
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
-import { ClientRequest } from 'http';
-import { Redirect } from 'react-router';
-import { removeListener, title } from 'process';
 import {useLocation} from "react-router-dom";
 
 /*
@@ -30,6 +21,8 @@ const poemUpdateRoute = 'http://localhost:8081/api/poems/update'
 //get user names of two users (user 2 will be found using matching algorithm)
 let username2 = "sample";
 localStorage.setItem('title', "example title");
+
+let workInProgress = false;
 
 let exit = false;
 
@@ -117,13 +110,24 @@ const DocEditor = () => {
   const location = useLocation();
   const context = useContext(myContext);
 
-  (location.state) ? username2 = location.state.matchedUser : username2 = "unknown"
+  let previousTitle = "";
+
+  if (location.state) {
+    username2 = location.state.matchedUser;
+    workInProgress = location.state.inProgress;
+    if (workInProgress) {
+      previousTitle = location.state.previousTitle;
+    }
+  } else {
+    username2 = "unknown";
+    workInProgress = false;
+  }
 
   let submitButton;
 
   const [editorState, setEditorState] = useState();
 
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState(previousTitle);
 
   const [values, setValues] = useState({
     title: "",
@@ -194,19 +198,45 @@ const DocEditor = () => {
     event.preventDefault();
   }
 
+  const handlePoemUpdate = () => {
+    console.log("going to update this poem:");
+    console.log("title=" + title);
+    console.log("values=");
+    console.log(values);
+  }
+
+  const handlePoemSubmission = () => {
+    console.log("going to submit this poem:");
+    console.log("title=" + title);
+    console.log("values=");
+    console.log(values);
+  }
+
+  if (workInProgress) {
+    submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1"
+                           onClick={handlePoemUpdate}>
+                     Update Poem
+                   </button>
+  } else {
+    submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1"
+                           onClick={handlePoemSubmission}>
+                     Submit Poem
+                   </button>
+  }
 
 
-  if(username2 != "unknown") {
-    if(exit) {
-      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;1/2&gt;</button>
-    }
-    else {
-      submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;0/2&gt;</button>
-    }
-  }
-  else {
-    submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem</button>
-  }
+
+  // if(username2 != "unknown") {
+  //   if(exit) {
+  //     submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;1/2&gt;</button>
+  //   }
+  //   else {
+  //     submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;0/2&gt;</button>
+  //   }
+  // }
+  // else {
+  //   submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem</button>
+  // }
 
   if (!editorState) {
     return (
