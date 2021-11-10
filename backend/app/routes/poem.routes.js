@@ -24,8 +24,11 @@ module.exports = app => {
     // POST path to find all the poems by a bunch of tags
     router.post("/tags", poemController.findPoemsByTags);
 
-    // POST path to append new line to the poem
-    router.post("/update", poemController.updatePoemBody);
+    // POST path to set the body of a poem
+    router.post("/update_body", poemController.updatePoemBody);
+
+    // POST path to set the title of a poem
+    router.post("/update_title", poemController.updatePoemTitle);
 
     app.use("/api/poems", router)
 }

@@ -22,7 +22,7 @@ exports.logout = (req, res) => {
  * @param done
  */
 exports.register = (req, res, done) => {
-    db.users.findOne( { username:req.body.username },
+    User.findOne( { username:req.body.username },
         (err,user) => {
             if(err) {
                 res.send({ message: "Error checking for that username already exists." });

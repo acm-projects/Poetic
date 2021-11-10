@@ -21,40 +21,53 @@ exports.createPoem = (req, res) => {
         return;
     }
 
-    // Create a Poem
-    const poem = new Poem({
-        title: req.body.title,
-        authors: req.body.authors,
-        tags: req.body.tags,
-        body: req.body.body,
-        inProgress: req.body.inProgress
-    });
-
-    // Save Poem in the database
-    poem
-        .save()
-        .then(data => {
-            console.log("Poem saving returned: " + data);
-
-            poem.authors.forEach(authorUsername => {
-                User.updateOne(
-                    { username: authorUsername },
-                    { $push: { poems: poem.title } }
-                ).then(data => {
-                    console.log("User updating returned: " + data);
-                }).catch(err => {
-                    console.log("Error occurred during user update: " + err);
+    Poem.findOne({ title: req.body.title })
+        .then(poem => {
+            if (poem) {
+                res.send({ message: "poem " + poem.title + " already exists." });
+            } else {
+                // Create a Poem
+                const newPoem = new Poem({
+                    title: req.body.title,
+                    authors: req.body.authors,
+                    tags: req.body.tags,
+                    body: req.body.body,
+                    inProgress: req.body.inProgress
                 });
-            });
 
-            res.send(data);
+                // Save Poem in the database
+                newPoem
+                    .save()
+                    .then(data => {
+                        console.log("Poem saving returned: " + data);
+
+                        newPoem.authors.forEach(authorUsername => {
+                            User.updateOne(
+                                { username: authorUsername },
+                                { $push: { poems: newPoem.title } }
+                            ).then(data => {
+                                console.log("User updating returned: " + data);
+                            }).catch(err => {
+                                console.log("Error occurred during user update: " + err);
+                            });
+                        });
+
+                        res.send(data);
+                    })
+                    .catch(err => {
+                        res.status(500).send({
+                            message:
+                                err.message || "Some error occurred while creating the Poem."
+                        });
+                    });
+            }
         })
         .catch(err => {
             res.status(500).send({
                 message:
-                    err.message || "Some error occurred while creating the Poem."
+                    err.message || "Some error occurred while checking if a Poem with that name exists already."
             });
-        });
+        })
 }
 
 /**
@@ -226,7 +239,6 @@ exports.findPoemsByTags = (req, res) => {
  * @param res
  */
 exports.updatePoemBody = (req, res) => {
-
     if (!req.body.newBody || !req.body.title) {
         res.status(400).send({ message: "Need to have a newBody and title." });
         return;
@@ -235,12 +247,36 @@ exports.updatePoemBody = (req, res) => {
     Poem.updateOne(
         { title: req.body.title },
         [{ $set: { body: req.body.newBody } }])
-        .then(res => {
-            console.log(res);
-            res.send(res);
+        .then(result => {
+            console.log(result);
+            res.send(result);
         })
         .catch(err => {
             console.log(err);
             res.send(err);
         });
+}
+
+/**
+ *
+ * @param {string} req.body.previousTitle The previous (current) title of the poem
+ * @param {string} req.body.newTitle The new title of the poem to set it to
+ * @param res
+ */
+exports.updatePoemTitle = (req, res) => {
+    if (!req.body.previousTitle || !req.body.newTitle) {
+        res.status(400).send({ message: "Need to have a previousTitle and newTitle." });
+        return;
+    }
+
+    Poem.updateOne({ title: req.body.previousTitle },
+        [{ $set: { title: req.body.newTitle }}])
+        .then(result => {
+            console.log(res);
+            res.send(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.send(err);
+        })
 }
