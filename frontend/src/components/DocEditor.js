@@ -9,8 +9,6 @@ import { EditorState } from 'draft-js';
 */
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
-import { ClientRequest } from 'http';
-import { Redirect } from 'react-router';
 import { removeListener, title } from 'process';
 import {useLocation} from "react-router-dom";
 
@@ -133,16 +131,21 @@ const DocEditor = () => {
     inProgress: true
   });
 
-  const handleValueChange = name => e => {
-    setValues({ ...values, [name]: e.target.value });
+  const handleValueChange = (e) => {
+    setValues({ [e.target.name]: e.target.value });
+  };
+
+  
+  const handleTitleChange = (e) => {
+    setTitle({ [e.target.name]: e.target.value });
+
+    //this is a temporary line that is horribly written, and makes this only work with title
+    localStorage.setItem('title', e.target.value)
+    console.log(e.target.value)
   };
 
   const handleEditorStateChange = (state) => {
     setEditorState(state);
-  }
-
-  const handleTitleChange = (state) => {
-    setTitle(state);
   }
 
   useEffect(() => {
@@ -188,9 +191,8 @@ const DocEditor = () => {
   }
 
   const handleSubmit = (event) => {
-    console.log(title)
-    alert('Title was submitted: ' + values.title);
-    localStorage.setItem('title', values.title);
+    console.log(localStorage.getItem('title'))
+    alert('Title was submitted: ' + localStorage.getItem('title'));
     event.preventDefault();
   }
 
@@ -259,9 +261,9 @@ const DocEditor = () => {
                       <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
-                            <form onSubmit ={e => handleSubmit(e)}>
-                              <input className="rounded border border-white u-align-center" type="title" placeholder="Enter a Poem Title!" value = {title}
-                                     onChange={e => handleTitleChange(e)}/>
+                            <form onSubmit ={handleSubmit}>
+                              <input className="rounded border border-white u-align-center" /*value = {values.title}*/ placeholder="Enter a Poem Title!"
+                                     onChange = {e => handleTitleChange(e)}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below. The color you are assigned to is:<br/>
@@ -405,8 +407,8 @@ const DocEditor = () => {
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
                             <form onSubmit ={handleSubmit}>
-                              <input className="rounded border border-white u-align-center" type="username" placeholder="Enter a Poem Title!"
-                                     onChange={handleValueChange}/>
+                              <input className="rounded border border-white u-align-center" /*value = {values.title}*/ type="username" placeholder="Enter a Poem Title!"
+                                     onChange={e => handleTitleChange(e)}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below! You are currently editing solo<br/>
