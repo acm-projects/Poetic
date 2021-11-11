@@ -18,6 +18,7 @@ module.exports = app => {
     // GET path to find a specific poem by id
     router.get("/:id", poemController.findPoemById);
 
+    // POST path to get a poem by title
     router.post("/title", poemController.findPoemByTitle);
 
     // GET path to find a list of all poems associated with a user by username
@@ -34,6 +35,10 @@ module.exports = app => {
 
     // POST path to set the title of a poem
     router.post("/update_title", poemController.updatePoemTitle);
+
+    // DELETE path to delete a poem by title
+    router.delete("/title", poemController.deletePoemByTitle)
+
 
     app.use("/api/poems", router)
 }

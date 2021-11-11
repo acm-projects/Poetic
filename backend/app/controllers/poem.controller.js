@@ -316,7 +316,12 @@ exports.updatePoem = (req, res) => {
         });
 }
 
-
+/**
+ *
+ * @param req
+ * @param {string} req.body.title The title of the poem to get
+ * @param res
+ */
 exports.findPoemByTitle = (req, res) => {
     if (!req.body.title) {
         res.status(400).send({ message: "Contents missing."});
@@ -330,4 +335,25 @@ exports.findPoemByTitle = (req, res) => {
         .catch(err => {
             res.send(err);
         });
+}
+
+/**
+ *
+ * @param req
+ * @param {string} req.body.title The title of the poem to get
+ * @param res
+ */
+exports.deletePoemByTitle = (req, res) => {
+    if (!req.body.title) {
+        res.status(400).send({ message: "Contents missing."});
+        return;
+    }
+
+    Poem.deleteOne({ title: req.body.title })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.send(err);
+        })
 }
