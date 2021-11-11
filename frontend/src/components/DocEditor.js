@@ -4,6 +4,7 @@ import {myContext} from "../Context";
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
 import {useLocation} from "react-router-dom";
+import {wait} from "@testing-library/react";
 
 /*
 function myBlockStyleFn(contentBlock) {
@@ -17,6 +18,7 @@ Strech Goal: change doc editor visuals when it is available
 
 const poemCreateRoute = 'http://localhost:8081/api/poems/'
 const poemUpdateRoute = 'http://localhost:8081/api/poems/update'
+const poemByTitleRoute = 'http://localhost:8081/api/poems/title'
 
 //get user names of two users (user 2 will be found using matching algorithm)
 let username2 = "sample";
@@ -119,6 +121,18 @@ const DocEditor = () => {
 
   let previousTitle = "";
 
+  let submitButton;
+
+  const [editorState, setEditorState] = useState();
+
+  const [values, setValues] = useState({
+    title: previousTitle,
+    authors: location.state ? [context.username, location.state.matchedUser] : [context.username],
+    tags: [],
+    body: "",
+    inProgress: true
+  });
+
   if (location.state) {
     username2 = location.state.matchedUser;
     workInProgress = location.state.inProgress;
@@ -130,19 +144,21 @@ const DocEditor = () => {
     workInProgress = false;
   }
 
-  let submitButton;
-
-  const [editorState, setEditorState] = useState();
-
-  const [title, setTitle] = useState(previousTitle);
-
-  const [values, setValues] = useState({
-    title: "",
-    authors: [context.username, ""],
-    tags: [],
-    body: "",
-    inProgress: true
-  });
+  useEffect(() => {
+    if (workInProgress ) {
+      axios.post(poemByTitleRoute, { title: location.state.previousTitle }, { withCredentials: true })
+          .then(res => {
+              console.log(res);
+              setValues({ ...values, title: res.data.title });
+              setValues({ ...values, body: res.data.body });
+              setValues({ ...values, tags: res.data.tags });
+              setValues({ ...values, authors: res.data.authors });
+              setValues({ ...values, inProgress: res.data.inProgress });
+            }).catch(err => {
+              console.log(err);
+            });
+    }
+  }, [])
 
   const handleValueChange = name => e => {
     setValues({ ...values, [name]: e.target.value });
@@ -194,25 +210,44 @@ const DocEditor = () => {
     //WIP
   }
 
-  const handleSubmit = (event) => {
-    console.log(title)
-    alert('Title was submitted: ' + values.title);
-    localStorage.setItem('title', values.title);
-    event.preventDefault();
-  }
+  // const handleSubmit = (event) => {
+  //   console.log(title)
+  //   alert('Title was submitted: ' + values.title);
+  //   localStorage.setItem('title', values.title);
+  //   event.preventDefault();
+  // }
 
   const handlePoemUpdate = () => {
     console.log("going to update this poem:");
-    console.log("title=" + title);
     console.log("values=");
     console.log(values);
+    axios.post(poemUpdateRoute, {
+      previousTitle: previousTitle,
+      newTitle: values.title,
+      body: values.body,
+    }, { withCredentials: true }).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.log(err);
+    });
   }
 
   const handlePoemSubmission = () => {
     console.log("going to submit this poem:");
-    console.log("title=" + title);
     console.log("values=");
     console.log(values);
+
+    axios.post(poemCreateRoute, {
+      title: values.title,
+      authors: values.authors,
+      tags: values.tags,
+      body: values.body,
+      inProgress: true
+    }, { withCredentials: true }).then(res => {
+      console.log(res);
+    }).catch(err => {
+      console.log(err);
+    });
   }
 
   const handleBlockEditorChange = (textOutput) => {
@@ -296,8 +331,9 @@ const DocEditor = () => {
                       <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
-                            <form onSubmit ={e => handleSubmit(e)}>
+                            <form>
                               <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
+                                     defaultValue={previousTitle}
                                      onChange={handleValueChange('title')}/>
                             </form>
                           </div>
@@ -441,8 +477,9 @@ const DocEditor = () => {
                       <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
-                            <form onSubmit ={handleSubmit}>
+                            <form>
                               <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
+                                     defaultValue={previousTitle}
                                      onChange={handleValueChange('title')}/>
                             </form>
                           </div>

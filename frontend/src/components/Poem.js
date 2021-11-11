@@ -22,6 +22,7 @@ const Poem = (props) => {
                 pathname: "/editor",
                 state: {
                     matchedUser: props.authors[1],
+                    previousTitle: props.title,
                     inProgress: true
                 },
             });
@@ -31,6 +32,7 @@ const Poem = (props) => {
                 pathname: "/editor",
                 state: {
                     matchedUser: props.authors[0],
+                    previousTitle: props.title,
                     inProgress: true
                 },
             });

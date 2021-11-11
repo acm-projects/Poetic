@@ -14,7 +14,6 @@ const User = db.users;
 // Create and save a Poem
 exports.createPoem = (req, res) => {
 
-    console.log(req);
     // Validate request
     if (!req.body.title || !req.body.authors || !req.body.tags || !req.body.body || !req.body.inProgress) {
         res.status(400).send({ message: "Contents missing."});
@@ -279,4 +278,56 @@ exports.updatePoemTitle = (req, res) => {
             console.log(err);
             res.send(err);
         })
+}
+
+/**
+ *
+ * @param {string} req.body.previousTitle The previous (current) title of the poem
+ * @param {string} req.body.newTitle The new title of the poem to set it to
+ * @param {string} req.body.body
+ * @param res
+ */
+exports.updatePoem = (req, res) => {
+    if (!req.body.previousTitle || !req.body.newTitle || !req.body.body) {
+        res.status(400).send({ message: "Contents missing."});
+        return;
+    }
+
+    Poem.updateOne({ title: req.body.previousTitle}, {
+        $set : { title: req.body.newTitle, body: req.body.body },
+    })
+        .then(data1 => {
+            Poem.findOne({ title: req.body.newTitle })
+                .then(data2 => {
+                    data2.authors.forEach(author => {
+                        User.updateOne(
+                            { username: author, poems: req.body.previousTitle },
+                            { $set: { "poems.$": req.body.newTitle }})
+                            .then(data3 => {
+                                res.send(data3);
+                            })
+                    })
+                    console.log(data2);
+                })
+            console.log(data1);
+        })
+        .catch(err => {
+            res.send(err);
+        });
+}
+
+
+exports.findPoemByTitle = (req, res) => {
+    if (!req.body.title) {
+        res.status(400).send({ message: "Contents missing."});
+        return;
+    }
+
+    Poem.findOne({ title: req.body.title })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.send(err);
+        });
 }
