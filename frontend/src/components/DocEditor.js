@@ -144,8 +144,8 @@ const DocEditor = () => {
     inProgress: true
   });
 
-  const handleValueChange = (e) => {
-    setValues({ [e.target.name]: e.target.value });
+  const handleValueChange = name => e => {
+    setValues({ ...values, [name]: e.target.value });
   };
 
   const handleEditorStateChange = (state) => {
@@ -195,8 +195,9 @@ const DocEditor = () => {
   }
 
   const handleSubmit = (event) => {
-    console.log(localStorage.getItem('title'))
-    alert('Title was submitted: ' + localStorage.getItem('title'));
+    console.log(title)
+    alert('Title was submitted: ' + values.title);
+    localStorage.setItem('title', values.title);
     event.preventDefault();
   }
 

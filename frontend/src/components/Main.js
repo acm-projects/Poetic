@@ -8,7 +8,7 @@ const Main = () => {
         Hello
         </div>
         <div className="bg-red-50 rounded p-4 font-normal text-6xl">
-            Welcome to PoetTogether,
+            Welcome to Poetic,
         </div>
         <div className="text-center text-left text-4xl font-light">
             &emsp; A webpage designed to allow collaboration between poets of all skill levels, regardless of location
