@@ -8,13 +8,14 @@ const Poem = (props) => {
     const history = useHistory();
 
     let authorsProcessed = "";
-
+    let duo = false;
     for (const author of props.authors) {
         authorsProcessed += author + ", ";
     }
 
     authorsProcessed = authorsProcessed.substr(0, authorsProcessed.length-2);
 
+    if(authorsProcessed.includes(',')) { console.log('facts'); duo = true }
     function createWithUser() {
         if (props.authors[0] === context.username) {
             console.log(props.authors[1]);
@@ -23,7 +24,8 @@ const Poem = (props) => {
                 state: {
                     matchedUser: props.authors[1],
                     previousTitle: props.title,
-                    inProgress: true
+                    inProgress: true,
+                    duo: duo
                 },
             });
         } else {
@@ -33,7 +35,8 @@ const Poem = (props) => {
                 state: {
                     matchedUser: props.authors[0],
                     previousTitle: props.title,
-                    inProgress: true
+                    inProgress: true,
+                    duo: duo
                 },
             });
         }

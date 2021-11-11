@@ -5,9 +5,11 @@ import {myContext} from "../Context";
 import axios from "axios";
 import configData from "../config.json";
 import image from "../resources/profileimage.png";
+import { useLocation } from "react-router";
 
 const Profile = (props) => {
     const context = useContext(myContext);
+    const location = useLocation();
     const tagList = [];
 
     const [isLoading, setLoading] = useState(true);

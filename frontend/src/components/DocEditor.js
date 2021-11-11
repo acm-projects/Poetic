@@ -4,6 +4,7 @@ import {myContext} from "../Context";
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
 import {useLocation} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {wait} from "@testing-library/react";
 
 /*
@@ -29,6 +30,8 @@ let workInProgress = false;
 let exit = false;
 
 const BlockEditor = (props) => {
+  const location = useLocation();
+
   const [editorState, setEditorState] = useState();
 
   useEffect(() => {
@@ -85,7 +88,7 @@ const BlockEditor = (props) => {
   }
 
   let button;
-  if (username2 != "unknown") {
+  if (location.state) {
     button = <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleTurn()}>End Turn</button>
   } else {
     //return nothing
@@ -118,6 +121,7 @@ const BlockEditor = (props) => {
 const DocEditor = () => {
   const location = useLocation();
   const context = useContext(myContext);
+
 
   let previousTitle = "";
 
@@ -210,13 +214,6 @@ const DocEditor = () => {
     //WIP
   }
 
-  // const handleSubmit = (event) => {
-  //   console.log(title)
-  //   alert('Title was submitted: ' + values.title);
-  //   localStorage.setItem('title', values.title);
-  //   event.preventDefault();
-  // }
-
   const handlePoemUpdate = () => {
     console.log("going to update this poem:");
     console.log("values=");
@@ -268,25 +265,17 @@ const DocEditor = () => {
 
 
 
-  // if(username2 != "unknown") {
-  //   if(exit) {
-  //     submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;1/2&gt;</button>
-  //   }
-  //   else {
-  //     submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem &lt;0/2&gt;</button>
-  //   }
-  // }
-  // else {
-  //   submitButton = <button class="u-active-custom-color-5 u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-white u-btn-2 u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleClick()}>Submit Poem</button>
-  // }
-
   if (!editorState) {
     return (
         <h3 className="loading">Loading...</h3>
     );
   }
 
-  if(username2 !== "unknown") {
+  let duo = false;
+  if(location.state) {
+    duo = location.state.duo
+  }
+  if(duo) {
     return (
         <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
           <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
@@ -433,7 +422,8 @@ const DocEditor = () => {
           </div>
         </div>
     );
-  } else {
+  } 
+else {
     return (
         <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
           <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
