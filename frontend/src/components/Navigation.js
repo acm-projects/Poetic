@@ -16,54 +16,68 @@ const Navigation = () => {
             });
     }
 
-    return (
+    return ( 
         
-        <div className="navigation">
-            <nav class="bg-gray-300">
-                {
-                    context ? (
-                        <div  class="font-light flex flex-row mx-4 gap-4 text-lg bg-gray-300 justify-end align-bottom">
-                            <div class="hover:underline w-1/12">
-                                <Link to="/">
-                                    <img src = {Logo}/>
-                                </Link>
-                            </div>
-                            <div class="flex-grow"/>
-                            <div class="hover:underline">
-                                <Link class="nav-link" to="/collaborate">
-                                    Collaborate
-                                </Link>
-                            </div>
-                            <div class="hover:underline ">
-                                <Link class="nav-link" to="/editor">
-                                    Editor
-                                </Link>
-                            </div>
-                            <div class="hover:underline ">
-                                <Link class="nav-link" to="/profile">
-                                    Profile
-                                </Link>
-                            </div>
-                            <div class="hover:underline ">
-                                <Link onClick={() => logout()} class="nav-link" to="/">
-                                    Sign Out
-                                </Link>
-                            </div>
-                        </div>
-                    ) : (
-                        <div  class="font-light flex flex-row mx-4 gap-4 text-lg bg-gray-300 justify-end align-bottom">
-                            <div class="hover:underline w-1/12">
-                            <Link to="/">
-                                <img src = {Logo}/>
-                            </Link>
-                            </div>
-                            <div class="flex-grow"/>
-                        </div>
-                    )
-                }
-            </nav>
-        </div>
-    );
+        context ? (
+<body>
+	<nav class="bg-blue-100 shadow-lg">
+		<div class="max-w-6xl mx-auto px-4">
+			<div class="flex justify-between">
+				<div class="flex space-x-7">
+					<div>
+                    <Link to="/" class="flex items-center py-4 px-2">
+                                    <img src = {Logo} class="h-16 w-45 mr-2"/>
+                    </Link>
+					</div>
+                    
+                    <div class="hidden md:flex items-center space-x-1">
+						<Link
+							to="/collaborate"
+							class="py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300"
+							>Collaborate
+                        </Link>
+					
+						<Link
+							to="/editor"
+							class="py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300"
+							>Editor
+                        </Link>
+
+						<Link
+							to="/Profile"
+							class="py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300"
+							>Profile
+                        </Link>
+
+						<Link onClick={() => logout()}
+							to="/"
+							class="py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300">
+                                Sign Out
+                        </Link>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+</body>
+) : (
+    <body>
+	<nav class="bg-blue-100 shadow-lg">
+		<div class="max-w-6xl mx-auto px-4">
+			<div class="flex justify-between">
+				<div class="flex space-x-7">
+					<div>
+                    <Link to="/" class="flex items-center py-4 px-2">
+                                    <img src = {Logo} class="h-16 w-45 mr-2"/>
+                    </Link>
+					</div>
+                    </div>
+			</div>
+		</div>
+	</nav>
+</body>
+    )
+)
 }
 
 export default withRouter(Navigation);
