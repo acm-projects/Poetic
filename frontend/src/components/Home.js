@@ -109,7 +109,7 @@ export default function Home() {
         return (
             <div>
                 { context ? (
-                    <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-200">
+                    <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
 
                         <div className="text-5xl text-black text-bold">
                            Welcome, {context.username}
@@ -146,7 +146,7 @@ export default function Home() {
                             </form>
                         </div>
 
-                        <Main/>
+                        <Main poems = {allPoems}/>
 
                         <PoemScroll poems={allPoems}/>
                     </div>
@@ -159,7 +159,7 @@ export default function Home() {
     return (
         <div>
             { context ? (
-                <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold py-10 px-20 bg-blue-200">
+                <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold py-10 px-20 bg-red-100">
                     Currently logged in as:
                     <div className="text-5xl text-black text-bold">
                         {context.username}
@@ -180,7 +180,7 @@ export default function Home() {
                     </div>
                 </div>
             ) : (
-                <div className="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
+                <div className="shadow-inner flex p-4 gap-10 justify-between bg-red-100">
                     <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
                         <h2>Login</h2>
                         <form className="flex flex-col gap-4">
@@ -197,7 +197,7 @@ export default function Home() {
                         </form>
                     </div>
 
-                    <Main/>
+                    <Main poems = {allPoems}/>
 
                     <PoemScroll poems={allPoems}/>
                 </div>

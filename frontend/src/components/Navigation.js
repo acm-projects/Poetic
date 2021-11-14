@@ -20,13 +20,13 @@ const Navigation = () => {
         
         context ? (
 <body>
-	<nav class="bg-blue-100 shadow-lg">
+	<nav class="bg-pink-100 shadow-lg flex w-screen">
 		<div class="max-w-6xl mx-auto px-4">
 			<div class="flex justify-between">
 				<div class="flex space-x-7">
 					<div>
-                    <Link to="/" class="flex items-center py-4 px-2">
-                                    <img src = {Logo} class="h-16 w-45 mr-2"/>
+                    <Link to="/" class="flex-start items-center py-4 px-2">
+                                    <img src = {Logo} class="h-10 w-25 mr-2"/>
                     </Link>
 					</div>
                     
@@ -62,7 +62,7 @@ const Navigation = () => {
 </body>
 ) : (
     <body>
-	<nav class="bg-blue-100 shadow-lg">
+	<nav class="bg-pink-100 shadow-lg w-screen">
 		<div class="max-w-6xl mx-auto px-4">
 			<div class="flex justify-between">
 				<div class="flex space-x-7">
