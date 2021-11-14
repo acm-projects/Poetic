@@ -46,7 +46,7 @@ const Poem = (props) => {
     if (props.inProgress) {
         return (
             <div class="flex flex-col justify-between text-center hover:bg-gray-100 font-light bg-white h-38 w-25 rounded">
-                <div class="rounded bg-blue-50 flex justify-start px-4">
+                <div class="rounded bg-secondary flex justify-start px-4">
                     {props.title}
                 </div>
                 <div class="flex-1 py-10 hover:underline">
@@ -67,7 +67,7 @@ const Poem = (props) => {
     }
 
     return (
-        <div class="flex flex-col justify-between text-center hover:bg-gray-100 font-light bg-white h-38 w-25 rounded">
+        <div class="flex flex-col justify-between text-center hover:bg-tertiary font-light bg-white h-38 w-25 rounded">
             <div class="rounded bg-blue-50 flex justify-start px-4">
                 {props.title}
             </div>

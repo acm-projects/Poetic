@@ -109,7 +109,7 @@ export default function Home() {
         return (
             <div>
                 { context ? (
-                    <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
+                    <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-primary">
 
                         <div className="text-5xl text-black text-bold">
                            Welcome, {context.username}
@@ -130,7 +130,7 @@ export default function Home() {
                         </div>
                     </div>
                 ) : (
-                    <div className="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
+                    <div className="shadow-inner flex p-4 gap-10 justify-between bg-primary">
                         <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
                             <form className="flex flex-col gap-4">
                                 <input className="rounded border border-white" type="username" placeholder="Name"
@@ -159,20 +159,20 @@ export default function Home() {
     return (
         <div>
             { context ? (
-                <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold py-10 px-20 bg-red-100">
+                <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold py-10 px-20 bg-primary">
                     Currently logged in as:
                     <div className="text-5xl text-black text-bold">
                         {context.username}
                     </div>
-                    <div className="flex gap-4 p-4 bg-blue-400 overflow-auto h-screen shadow-inner rounded">
+                    <div className="flex gap-4 p-4 bg-gray-100 overflow-auto h-screen shadow-inner rounded">
                         <div className="flex flex-col flex-1 gap-4">
-                            <div className="bg-red-100 rounded p-2">
+                            <div className="bg-primary rounded p-2">
                                 Browse
                             </div>
                             <PoemScroll poems={allPoems}/>
                         </div>
                         <div className="flex flex-col flex-1">
-                            <div className="bg-green-100 rounded p-2">
+                            <div className="bg-primary rounded p-2">
                                 Based on your tags
                             </div>
                             <PoemScroll poems={poemsByTags}/>
@@ -180,7 +180,7 @@ export default function Home() {
                     </div>
                 </div>
             ) : (
-                <div className="shadow-inner flex p-4 gap-10 justify-between bg-red-100">
+                <div className="shadow-inner flex p-4 gap-10 justify-between bg-primary">
                     <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
                         <h2>Login</h2>
                         <form className="flex flex-col gap-4">

@@ -24,7 +24,7 @@ const Main = (props) =>  {
 
         return (
                 <div class="bg-white rounded shadow py-2">
-                <p class="text-gray-800 text-base px-6 mb-5">{(poem.body).substr(0, 150) + "..."}</p>
+                <p class="text-gray-800 text-base px-6 mb-5 hover:text-pink-500">{(poem.body).substr(0, 150) + "..."}</p>
                 <p class="text-gray-500 text-xs md:text-sm px-6">{poem.authors[1] ? poem.authors[0] + ", " + poem.authors[1] : poem.authors[0]}</p>
                 </div>
         ) 
