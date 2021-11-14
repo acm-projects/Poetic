@@ -93,7 +93,43 @@ require("./app/routes/user.routes")(app);
 require("./app/routes/authentication.routes")(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8081;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}.`);
+const PORT = 8081;
+
+var http = require('http').createServer(app);
+var io = require('socket.io')(http, { cors: { origin: '*', methods: ['GET', 'POST'] } });
+
+var roomInfo = {};
+
+io.on('connection', function(socket, data) {
+    const poemTitle = socket.request._query["poemTitle"];
+    console.log('Client connected with data:', poemTitle);
+
+    console.log("about to emit initial value: ", roomInfo[poemTitle] ? roomInfo[poemTitle] : null);
+    socket.emit('initial value', roomInfo[poemTitle] ? roomInfo[poemTitle] : null);
+
+    socket.join(poemTitle);
+
+    socket.on('disconnect', () => {
+        if (!io.sockets.adapter.rooms[poemTitle] || (roomInfo[poemTitle] && io.sockets.adapter.rooms[poemTitle].length < 1)) {
+            delete roomInfo[poemTitle];
+        }
+        console.log('Client disconnected');
+    });
+
+    socket.on('message', (event) => {
+        console.log("Received a text change", event);
+        // console.log("this change contained the blockMap:", event["_immutable"]["currentContent"]["blockMap"]);
+        roomInfo[poemTitle] = event;
+        socket.to(poemTitle).emit('message', event);
+    });
+});
+
+io.on('disconnect', (event) => {
+    console.log('Some people left.');
+})
+
+http.listen(PORT, function() {
+    var host = http.address().address
+    var port = http.address().port
+    console.log('App listening at http://%s:%s', host, port)
 });

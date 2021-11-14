@@ -12,7 +12,7 @@ exports.findAllUsers = (req, res) => {
             $project: { password: 0 }
         }])
         .then(data => {
-            console.log(data);
+            // console.log(data);
             res.send(data);
         })
         .catch(err => {
@@ -48,10 +48,10 @@ exports.findByUsername = (req, res) => {
         }])
         .then(data => {
             if (data.empty()) {
-                console.log("No user found with username " + username);
+                // console.log("No user found with username " + username);
                 res.status(404).send({ message: "No user found with username " + username });
             } else {
-                console.log(data);
+                // console.log(data);
                 res.send(data);
             }
         })
@@ -80,7 +80,7 @@ exports.findByPoemId = (req, res) => {
             if (!poemData) {
                 res.status(404).send({ message: "Did not find Poem with id " + id });
             } else {
-                console.log(poemData.authors);
+                // console.log(poemData.authors);
                 const authors = poemData.authors;
                 User.aggregate([
                     {
@@ -90,7 +90,7 @@ exports.findByPoemId = (req, res) => {
                         $project: { password: 0 }
                     }])
                     .then(data => {
-                        console.log(data);
+                        // console.log(data);
                         res.send(data);
                     })
                     .catch(err => {
@@ -133,11 +133,11 @@ exports.getCompatibility = (req, res) => {
             if(!user) {
                 res.status(404).send({ message: "Did not find User with username " + username });
             } else {
-                console.log(user.poems);
+                // console.log(user.poems);
                 const poems = user.poems;
                 Poem.find({ title: { $in: poems } })
                     .then(data => {
-                        console.log(data);
+                        // console.log(data);
                         data.forEach(poem => poem.tags.forEach(tag => allPoemTags.push(tag)));
                         res.send({ "score": compatibilityScore(req.user, user, allPoemTags, conditions) });
                     })

@@ -1,21 +1,11 @@
 import React, {useContext, useEffect, useState} from 'react';
-import { EditorState, Editor, convertToRaw, convertFromRaw } from 'draft-js';
+import { ContentState, EditorState, Editor, convertToRaw, convertFromRaw } from 'draft-js';
 import {myContext} from "../Context";
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
 import {useLocation} from "react-router-dom";
-import {useHistory} from "react-router-dom";
-import {wait} from "@testing-library/react";
 
-/*
-function myBlockStyleFn(contentBlock) {
-  const type = contentBlock.getType();
-  if (type === 'blockquote') {
-    return 'customEditor';
-  }
-}
-Strech Goal: change doc editor visuals when it is available
-*/
+import * as api from '../socket-api';
 
 const poemCreateRoute = 'http://localhost:8081/api/poems/'
 const poemUpdateRoute = 'http://localhost:8081/api/poems/update'
@@ -29,99 +19,11 @@ let workInProgress = false;
 
 let exit = false;
 
-const BlockEditor = (props) => {
-  const location = useLocation();
-
-  const [editorState, setEditorState] = useState();
-
-  useEffect(() => {
-    if (window.localStorage.getItem('message')) {
-      handleEditorStateChange(EditorState.createWithContent(convertFromRaw(JSON.parse(window.localStorage.getItem('message')))));
-    } else {
-      handleEditorStateChange(EditorState.createEmpty());
-    }
-  }, []);
-
-  const handleEditorStateChange = (state) => {
-    setEditorState(state);
-  }
-
-  const onChange = (editorState) => {
-    setEditorState(editorState);
-    console.log('editor state', editorState);
-    const contentState = editorState.getCurrentContent();
-    console.log('content state', convertToRaw(contentState));
-    console.log('message', JSON.stringify(convertToRaw(contentState)));
-    let fullText = "";
-    convertToRaw(contentState).blocks.forEach(block => {
-      fullText += block.text + '\n';
-    });
-    props.onChange(fullText);
-    console.log(fullText);
-    window.localStorage.setItem('message', JSON.stringify(convertToRaw(contentState)));
-  }
-
-  if (!editorState) {
-    return (
-        <h3 className="loading">Loading...</h3>
-    );
-  }
-
-  //handles the end turn button
-  const handleTurn = (e) => {
-    console.log("You clicked submit.");
-    console.log(localStorage.getItem('title'))
-    const content = editorState.getCurrentContent().getPlainText()
-    window.localStorage.setItem('poemContent', content);
-
-    console.log(content)
-
-    axios.post(poemUpdateRoute, {
-      title: localStorage.getItem('title'),
-      newBody: (content) ?  content : "needs some text!",
-    }).then(res => {
-      console.log(res);
-    }).catch(err => {
-      console.log(err);
-    })
-    //WIP
-  }
-
-  let button;
-  if (location.state) {
-    button = <button class="place-self-auto u-border-2 u-border-hover-palette-1-base u-border-palette-1-base u-btn u-btn-round u-button-style u-hover-palette-1-base u-none u-radius-50 u-text-active-palette-1-light-2 u-text-custom-color-1 u-text-hover-white u-btn-1" onClick={() => handleTurn()}>End Turn</button>
-  } else {
-    //return nothing
-  }
-
-  return (
-      <div class="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500" data-animation-direction="">
-        <div class="u-container-layout u-container-layout-2 h-3/6">
-          <Editor
-              editorState ={editorState}
-              onChange={onChange}
-              toolbarHidden
-              wrapperClassName="wrapper-class"
-              editorClassName="editor-class"
-              toolbarClassName="toolbar-class"
-              toolbar={{
-                inline: { inDropdown: true },
-                list: { inDropdown: true },
-                textAlign: { inDropdown: true },
-                link: { inDropdown: true },
-                history: { inDropdown: true },
-              }}
-          />
-        </div>
-        {button}
-      </div>
-  )
-}
-
 const DocEditor = () => {
   const location = useLocation();
   const context = useContext(myContext);
 
+  const [socket, setSocket] = useState(null);
 
   let previousTitle = "";
 
@@ -149,47 +51,56 @@ const DocEditor = () => {
   }
 
   useEffect(() => {
-    if (workInProgress ) {
-      axios.post(poemByTitleRoute, { title: location.state.previousTitle }, { withCredentials: true })
-          .then(res => {
-              console.log(res);
-              setValues({ ...values, title: res.data.title });
-              setValues({ ...values, body: res.data.body });
-              setValues({ ...values, tags: res.data.tags });
-              setValues({ ...values, authors: res.data.authors });
-              setValues({ ...values, inProgress: res.data.inProgress });
-            }).catch(err => {
-              console.log(err);
-            });
+    if (!context) {
+      window.location.href = "/";
     }
-  }, [])
+    if (previousTitle) {
+      if (!socket) {
+        const newSocket = api.connectToSocket(location.state.previousTitle, (err, data) => {
+          console.log('data returned after socket creation= ', data);
+          if (data) {
+            console.log('received data on socket connection', data);
+            setEditorState(data);
+          } else {
+            console.log('about to make post request to poemByTitleRoute');
+            axios.post(poemByTitleRoute, { title: location.state.previousTitle }, { withCredentials: true })
+                .then(res => {
+                  console.log('post received after call to poemByTitleRoute', res);
+                  setValues({ title: res.data.title, body: res.data.body, tags: res.data.tags, authors: res.data.authors, inProgress: res.data.inProgress });
+                  setEditorState(EditorState.createWithContent(ContentState.createFromText(res.data.body)));
+                }).catch(err => {
+                  console.log(err);
+                });
+          }
+        });
+        console.log('setting socket to ', newSocket);
+        setSocket(newSocket);
+      } else {
+        console.log('there is a socket, so subscribing to the editor data');
+        api.subscribeToEditorData(socket,(err, data) => {
+          console.log(data);
+          setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data))));
+          setValues({...values, body: convertFromRaw(JSON.parse(data)).getPlainText()})
+        });
+      }
+    } else {
+      console.log('creating an empty editor state');
+      setEditorState(EditorState.createEmpty());
+      setValues({...values, body: ""});
+    }
+  }, [socket])
 
   const handleValueChange = name => e => {
     setValues({ ...values, [name]: e.target.value });
   };
 
-  const handleEditorStateChange = (state) => {
-    setEditorState(state);
-  }
-
-  useEffect(() => {
-    if (!context) {
-      window.location.href = "/";
-    }
-    if (window.localStorage.getItem('content')) {
-      handleEditorStateChange(EditorState.createWithContent(convertFromRaw(JSON.parse(window.localStorage.getItem('content')))));
-    } else {
-      handleEditorStateChange(EditorState.createEmpty());
-    }
-  }, []);
-
-
   const onChange = (editorState) => {
+    console.log('editorState=', editorState);
     setEditorState(editorState);
-    console.log('editor state', editorState);
-    const contentState = editorState.getCurrentContent();
-    console.log('content state', convertToRaw(contentState));
-    window.localStorage.setItem('content', JSON.stringify(convertToRaw(contentState)))
+    setValues({...values, body: editorState.getCurrentContent().getPlainText()});
+    if (socket) {
+      api.sendEditorDataChange(socket, JSON.stringify(convertToRaw(editorState.getCurrentContent())));
+    }
   }
 
   //Function that handles the exit page button
@@ -330,41 +241,28 @@ const DocEditor = () => {
                             <span class="u-text-custom-color-2"></span>
                           </p>
                           <h5 class="u-align-center u-text u-text-custom-color-2 u-text-3" data-animation-name="pulse" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""> &lt;color&gt;</h5>
-                          <div class="u-border-5 u-border-custom-color-5 u-custom-color-3 u-radius-15 u-shape u-shape-round u-shape-1" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="0" data-animation-direction="">
-                            <Editor
-                                editorState ={editorState}
-                                onChange={onChange}
-                                toolbarHidden
-                                wrapperClassName="wrapper-class"
-                                editorClassName="editor-class"
-                                toolbarClassName="toolbar-class"
-                                toolbar={{
-                                  inline: { inDropdown: true },
-                                  list: { inDropdown: true },
-                                  textAlign: { inDropdown: true },
-                                  link: { inDropdown: true },
-                                  history: { inDropdown: true },
-                                }}
-                            />
-                          </div>
-                          <div class="u-border-5 u-border-custom-color-2 u-custom-color-6 u-radius-15 u-shape u-shape-round u-shape-2" data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1000" data-animation-direction="">
-                            <Editor
-                                editorState ={editorState}
-                                onChange={onChange}
-                                toolbarHidden
-                                wrapperClassName="wrapper-class"
-                                editorClassName="editor-class"
-                                toolbarClassName="toolbar-class"
-                                toolbar={{
-                                  inline: { inDropdown: true },
-                                  list: { inDropdown: true },
-                                  textAlign: { inDropdown: true },
-                                  link: { inDropdown: true },
-                                  history: { inDropdown: true },
-                                }}
-                            />
-                            <BlockEditor onChange={handleBlockEditorChange}/>
-                          </div>
+                            <div
+                                className="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
+                                data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500"
+                                data-animation-direction="">
+                              <div className="u-container-layout u-container-layout-2 h-3/6">
+                                <Editor
+                                    editorState={editorState}
+                                    onChange={onChange}
+                                    toolbarHidden
+                                    wrapperClassName="wrapper-class"
+                                    editorClassName="editor-class"
+                                    toolbarClassName="toolbar-class"
+                                    toolbar={{
+                                      inline: {inDropdown: true},
+                                      list: {inDropdown: true},
+                                      textAlign: {inDropdown: true},
+                                      link: {inDropdown: true},
+                                      history: {inDropdown: true},
+                                    }}
+                                />
+                              </div>
+                            </div>
                         </div>
                       </div>
                       <div class="u-align-left u-container-style u-layout-cell u-right-cell u-size-17 u-size-xs-60 u-layout-cell-2" src="">
@@ -476,7 +374,28 @@ else {
                           <p class="u-align-center u-text u-text-2">Feel free to type below! You are currently editing solo<br/>
                             <span class="u-text-custom-color-2"></span>
                           </p>
-                          <BlockEditor onChange={handleBlockEditorChange}/>
+                          <div
+                              className="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
+                              data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500"
+                              data-animation-direction="">
+                            <div className="u-container-layout u-container-layout-2 h-3/6">
+                              <Editor
+                                  editorState={editorState}
+                                  onChange={onChange}
+                                  toolbarHidden
+                                  wrapperClassName="wrapper-class"
+                                  editorClassName="editor-class"
+                                  toolbarClassName="toolbar-class"
+                                  toolbar={{
+                                    inline: {inDropdown: true},
+                                    list: {inDropdown: true},
+                                    textAlign: {inDropdown: true},
+                                    link: {inDropdown: true},
+                                    history: {inDropdown: true},
+                                  }}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>

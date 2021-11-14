@@ -38,16 +38,16 @@ exports.createPoem = (req, res) => {
                 newPoem
                     .save()
                     .then(data => {
-                        console.log("Poem saving returned: " + data);
+                        // console.log("Poem saving returned: " + data);
 
                         newPoem.authors.forEach(authorUsername => {
                             User.updateOne(
                                 { username: authorUsername },
                                 { $push: { poems: newPoem.title } }
                             ).then(data => {
-                                console.log("User updating returned: " + data);
+                                // console.log("User updating returned: " + data);
                             }).catch(err => {
-                                console.log("Error occurred during user update: " + err);
+                                // console.log("Error occurred during user update: " + err);
                             });
                         });
 
@@ -77,7 +77,7 @@ exports.createPoem = (req, res) => {
 exports.findAllPoems = (req, res) => {
     Poem.find()
         .then(data => {
-            console.log(data);
+            // console.log(data);
             res.send(data);
         })
         .catch(err => {
@@ -95,7 +95,7 @@ exports.findAllPoems = (req, res) => {
 exports.findAllCompletedPoems = (req, res) => {
     Poem.find({ inProgress: false })
         .then(data => {
-            console.log(data);
+            // console.log(data);
             res.send(data);
         })
         .catch(err => {
@@ -113,7 +113,7 @@ exports.findAllCompletedPoems = (req, res) => {
 exports.findAllInProgressPoems = (req, res) => {
     Poem.find({ inProgress: true })
         .then(data => {
-            console.log(data);
+            // console.log(data);
             res.send(data);
         })
         .catch(err => {
@@ -135,10 +135,10 @@ exports.findPoemById = (req, res) => {
     Poem.findById(id)
         .then(data => {
             if (!data) {
-                console.log("No poem found with id " + id);
+                // console.log("No poem found with id " + id);
                 res.status(404).send({ message: "No poem found with id " + id });
             } else {
-                console.log(data);
+                // console.log(data);
                 res.send(data);
             }
         })
@@ -168,11 +168,11 @@ exports.findPoemsByUsername = (req, res) => {
             if(!user) {
                 res.status(404).send({ message: "Did not find User with username " + username });
             } else {
-                console.log(user.poems);
+                // console.log(user.poems);
                 const poems = user.poems;
                 Poem.find({ title: { $in: poems } })
                     .then(data => {
-                        console.log(data);
+                        // console.log(data);
                         res.send(data);
                     })
                     .catch(err => {
@@ -247,11 +247,11 @@ exports.updatePoemBody = (req, res) => {
         { title: req.body.title },
         [{ $set: { body: req.body.newBody } }])
         .then(result => {
-            console.log(result);
+            // console.log(result);
             res.send(result);
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             res.send(err);
         });
 }
@@ -271,11 +271,11 @@ exports.updatePoemTitle = (req, res) => {
     Poem.updateOne({ title: req.body.previousTitle },
         [{ $set: { title: req.body.newTitle }}])
         .then(result => {
-            console.log(res);
+            // console.log(res);
             res.send(result);
         })
         .catch(err => {
-            console.log(err);
+            // console.log(err);
             res.send(err);
         })
 }
@@ -304,12 +304,12 @@ exports.updatePoem = (req, res) => {
                             { username: author, poems: req.body.previousTitle },
                             { $set: { "poems.$": req.body.newTitle }})
                             .then(data3 => {
-                                res.send(data3);
+                                res.status(200).send({ message: "Update finished."});
                             })
                     })
-                    console.log(data2);
+                    // console.log(data2);
                 })
-            console.log(data1);
+            // console.log(data1);
         })
         .catch(err => {
             res.send(err);
