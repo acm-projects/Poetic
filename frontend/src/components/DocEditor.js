@@ -277,7 +277,7 @@ const DocEditor = () => {
   }
   if(duo) {
     return (
-        <div class="shadow-inner flex p-4 gap-10 justify-between bg-primary">
+        <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
           <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
             <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
               <div class="menu-collapse">
@@ -425,19 +425,50 @@ const DocEditor = () => {
   } 
 else {
     return (
-        <div class="shadow-inner flex p-4 gap-10 justify-between bg-secondary">
-          <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1"></div>
-          <div class="place-self-auto u-align-center bg-secondary">
+        <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
+          <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
+            <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
+              <div class="menu-collapse">
+                <a class="place-self-auto u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-text-hover-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+                  <defs><symbol id="menu-hamburger" viewBox="0 0 16 16"><rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+                  </symbol>
+                  </defs>
+                </a>
+              </div>
+              <div class="u-nav container">
+                <ul class="u-nav u-unstyled u-nav-1"><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-custom-color-7 u-text-hover-custom-color-2" href="Home.html">Home</a>
+                </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-custom-color-7 u-text-hover-custom-color-2" href="Create-Poem.html">Create Poem</a>
+                </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-custom-color-7 u-text-hover-custom-color-2" href="Collaborate.html">Collaborate</a>
+                </li><li class="u-nav-item"><a class="u-button-style u-nav-link u-text-active-custom-color-7 u-text-hover-custom-color-2" href="Profile.html">Profile</a>
+                </li></ul>
+              </div>
+              <div class="u-custom-menu u-nav-container-collapse">
+                <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+                  <div class="u-inner-container-layout u-sidenav-overflow">
+                    <div class="u-menu-close"></div>
+                    <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2 p-px"><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Home.html">Home</a>
+                    </li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Create-Poem.html">Create Poem</a>
+                    </li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Collaborate.html">Collaborate</a>
+                    </li><li class="u-nav-item"><a class="u-button-style u-nav-link" href="Profile.html">Profile</a>
+                    </li></ul>
+                  </div>
+                </div>
+                <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+              </div>
+            </nav>
+          </div>
+
+          <div class="place-self-auto u-align-center">
             <section class="u-clearfix u-section-1" id="sec-05a1">
               <div class="u-clearfix u-sheet u-sheet-1 u-align-center" >
                 <div class="u-clearfix u-expanded-width u-gutter-0 u-layout-wrap u-layout-wrap-1">
                   <div class="u-layout">
                     <div class="u-layout-row">
-                      <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 bg-tertiary u-layout-cell-1">
+                      <div class="u-container-style u-layout-cell u-center-cell u-radius-18 u-shape-round u-size-43 u-size-xs-60 u-white u-layout-cell-1">
                         <div class="u-container-layout u-container-layout-1">
                           <div class="u-align-center u-text u-text-1">
                             <form>
-                              <input className="rounded border bg-secondary border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
+                              <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
                                      defaultValue={previousTitle}
                                      onChange={handleValueChange('title')}/>
                             </form>

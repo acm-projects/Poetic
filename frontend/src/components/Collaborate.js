@@ -73,15 +73,23 @@ const Collaborate = () => {
     }
 
     return (
+        <div>
+        <div class="self-start w-screen flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-gray-50 flex-1">
+        Currently logged in as:
+        <div className="text-3xl text-black text-bold">
+            {context.username}
+        </div>
+    </div>
         <div class="flex flex-col py-10 px-20 h-screen overflow-auto gap-4 flex-1">
             <div>
             {displayUser(loading)}
             </div>
-            <div class="flex justify-evenly bg-gray-50 p-4 rounded">
-                <button class="bg-green-100 rounded p-4 hover:bg-green-200" onClick={createWithUser}>Match</button>
-                <button class="bg-red-100 rounded p-4 hover:bg-red-200" onClick={nextMatch}>Next</button>
+            <div class="flex justify-between items-center mt-2"> 
+                <button class="w-full h-12 rounded-md bg-pink-100 border-2 text-md hover:shadow hover:bg-red-100 hover:border-pink-700 hover:text-black" onClick = {createWithUser}>Match</button>
+                <button class="w-full h-12 rounded-md bg-blue-100 text-black text-md hover:shadow hover:bg-blue-200 hover:border-gray-500" onClick = {nextMatch}>Decline</button> 
             </div>
         </div>
+    </div>
     )
 }
 

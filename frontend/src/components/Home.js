@@ -109,7 +109,7 @@ export default function Home() {
         return (
             <div>
                 { context ? (
-                    <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-primary">
+                    <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-pink-50">
 
                         <div className="text-5xl text-black text-bold">
                            Welcome, {context.username}
@@ -130,7 +130,7 @@ export default function Home() {
                         </div>
                     </div>
                 ) : (
-                    <div className="shadow-inner flex p-4 gap-10 justify-between bg-primary">
+                    <div className="shadow-inner flex p-4 gap-10 justify-between bg-pink-50">
                         <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
                             <form className="flex flex-col gap-4">
                                 <input className="rounded border border-white" type="username" placeholder="Name"
@@ -159,23 +159,23 @@ export default function Home() {
     return (
         <div>
             { context ? (
-                <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold py-10 px-20 bg-primary">
+                <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold py-10 px-20 bg-gray-50">
                     Currently logged in as:
                     <div className="text-5xl text-black text-bold">
                         {context.username}
                     </div>
-                    <div className="flex gap-4 p-4 bg-gray-100 overflow-auto h-screen shadow-inner rounded">
+                    <div className="flex gap-4 p-4 bg-pink-50 overflow-auto h-screen shadow-inner rounded">
                         <div className="flex flex-col flex-1 gap-4">
-                            <div className="bg-primary rounded p-2">
+                            <div className="bg-blue-100 rounded p-2">
                                 Browse
                             </div>
                             <PoemScroll poems={allPoems}/>
                         </div>
-                        <div className="flex flex-col flex-1">
-                            <div className="bg-primary rounded p-2">
+                        <div className="flex flex-col flex-1 gap-4">
+                            <div className="bg-blue-100 rounded p-2">
                                 Based on your tags
                             </div>
-                            <PoemScroll poems={poemsByTags}/>
+                            {(context.tags.length > 0) ? <PoemScroll poems={poemsByTags}/> : <p>You have no tags selected!</p>}
                         </div>
                     </div>
                 </div>

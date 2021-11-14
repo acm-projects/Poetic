@@ -35,7 +35,7 @@ const Main = (props) =>  {
 
     return (
     <div>
-        <main class="h-flex flex items-center bg-gray-100">
+        <main class="h-flex flex items-center bg-pink-50">
         <div className="self-start flex flex-col gap-4 p-6 font-bold text-8xl flex-1">
         <div className="p-4 font-normal text-6xl mb-3">
             Welcome to Poetic
@@ -47,7 +47,7 @@ const Main = (props) =>  {
     </main>
 
     <section class="bg-pink-100">
-  <div class="container mx-auto px-6 py-20">
+  <div class="container mx-auto px-6 py-20 rounded-50">
     <h2 class="text-4xl font-bold text-center text-gray-800 mb-8">
       User's Poems
     </h2>

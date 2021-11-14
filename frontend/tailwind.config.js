@@ -12,7 +12,7 @@ module.exports = {
       pink: '#FBE6FE',
       primary: '#FFE5D9',
       secondary: colors.pink,
-      tertiary: colors.blue
+      tertiary: '#D8E2DC'
     }
   },
   variants: {
