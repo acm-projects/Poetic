@@ -31,7 +31,7 @@ export default function Login () {
     };
 
     return (
-        <div className="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
+        <div className="shadow-inner flex p-4 gap-10 justify-between bg-pink-100">
             <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
                 <h2>Login</h2>
                 <form className="flex flex-col gap-4">
@@ -44,7 +44,7 @@ export default function Login () {
                     </button>
                 </form>
             </div>
-            <div className="self-start flex flex-col gap-4 p-6 font-bold text-8xl flex-1 bg-white rounded">
+            <div className="self-start flex flex-col gap-4 p-6 font-bold text-8xl flex-1 bg-pink-200 rounded">
                 <div>
                 Hello
                 </div>
