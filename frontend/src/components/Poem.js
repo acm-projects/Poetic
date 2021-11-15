@@ -15,7 +15,7 @@ const Poem = (props) => {
 
     authorsProcessed = authorsProcessed.substr(0, authorsProcessed.length-2);
 
-    if(authorsProcessed.includes(',')) { console.log('facts'); duo = true }
+    if(authorsProcessed.includes(',')) { console.log('matched with user'); duo = true }
     function createWithUser() {
         if (props.authors[0] === context.username) {
             console.log(props.authors[1]);
@@ -45,29 +45,29 @@ const Poem = (props) => {
 
     if (props.inProgress) {
         return (
-            <div class="flex flex-col justify-between text-center hover:bg-gray-100 font-light bg-white h-38 w-25 rounded">
-                <div class="rounded bg-blue-50 flex justify-start px-4">
-                    {props.title}
+            <div class="flex flex-col justify-between text-center hover:bg-gray-100 py-5 font-light bg-white h-38 w-25 rounded">
+                <div class="rounded bg-secondary flex justify-start px-4">
+                    <h3>{props.title}</h3>
                 </div>
                 <div class="flex-1 py-10 hover:underline">
                     {props.content}
-                    <button
-                        className="bg-green-50 focus:outline-black hover:bg-green-100 rounded p-4"
-                        onClick={createWithUser}>
-                        Edit
-                    </button>
                 </div>
-                <div class="rounded bg-blue-50 flex justify-end px-4">
+                <div class="rounded bg-primary flex justify-end px-4">
                     <div>
                         {authorsProcessed}
                     </div>
                 </div>
+                <button
+                        class= "w-full self-center h-12 rounded-md bg-pink-100 border-2 max-w-lg text-md hover:shadow hover:bg-red-100 hover:border-pink-700 hover:text-black"
+                        onClick={createWithUser}>
+                        Edit
+                </button>
             </div>
         );
     }
 
     return (
-        <div class="flex flex-col justify-between text-center hover:bg-gray-100 font-light bg-white h-38 w-25 rounded">
+        <div class="flex flex-col justify-between text-center hover:bg-tertiary font-light bg-white h-38 w-25 rounded">
             <div class="rounded bg-blue-50 flex justify-start px-4">
                 {props.title}
             </div>

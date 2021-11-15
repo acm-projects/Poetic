@@ -2,8 +2,18 @@ const colors = require('tailwindcss/colors')
 
 module.exports = {
   purge: [],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: media, // or 'media' or 'class'
   theme: {
+    colors: {
+      transparent: 'transparent',
+      gray: colors.coolGray,
+      blue: colors.lightBlue,
+      red: colors.rose,
+      pink: '#FBE6FE',
+      primary: '#FFE5D9',
+      secondary: colors.pink,
+      tertiary: '#D8E2DC'
+    }
   },
   variants: {
     extend: {},

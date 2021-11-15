@@ -9,10 +9,9 @@ import Profile from "./Profile";
 
 const ProfilePage = (props) => {
     const context = useContext(myContext);
-
     return (
         <div>
-            <Profile username={context.username} tags={context.tags}/>
+            <Profile username={context.username} tags={context.tags} currentUser = {true}/>
         </div>
     );
 }

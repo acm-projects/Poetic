@@ -23,7 +23,6 @@ const PoemScroll = (props) => {
 
     return (
         <div class="flex flex-col py-5 h-screen overflow-auto gap-4 flex-1">
-
             {getPoems()}
             <button class="bg-red-100 rounded p-4 hover:bg-red-300" onClick={refreshPoems}>Load More</button>
 

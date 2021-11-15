@@ -6,6 +6,7 @@ import axios from "axios";
 import configData from "../config.json";
 import image from "../resources/profileimage.png";
 import { useLocation } from "react-router";
+import { Link } from "react-router-dom";
 
 const Profile = (props) => {
     const context = useContext(myContext);
@@ -34,42 +35,64 @@ const Profile = (props) => {
 
     if (isLoading) {
         return (
-            <div>
-                <div className="flex flex-col gap-4 bg-red-50">
-                    <div className="flex">
-                        <div>
-                            <img src={image} alt="Profile logo of pen"/>
-                        </div>
-                        <div className="bg-red-200 text-7xl p-4">
-                            {props.username}
-                        </div>
-                        <div className="flex justify-evenly flex-1 bg-red-100 p-4">
-                            {tagList}
-                        </div>
+            <div className="flex flex-col gap-4 bg-pink-50 rounded-2xl">
+            <div class="container flex justify-center py-10">
+        <div class="p-3 bg-blue-100 rounded-xl max-h-sm w-max-lg hover:shadow">
+            <div class="flex justify-between w-full">
+                <div class="ml-2">
+                    <div class="p-3">
+                        <h3 class="text-2xl">{props.username}</h3>
                     </div>
-                    <div>Loading Poems...</div>
+                    <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                        <div class="mr-3"> <span class="text-gray-400 block">Tags</span> <span class="font-bold text-black text-xl">{props.tags.length}</span> </div>
+                        <div class="mr-3"> <span class="text-gray-400 block">Poems</span> <span class="font-bold text-black text-xl">{poems.length}</span> </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <h2>Loading...</h2>
+    </div>
         )
     }
 
     return (
         <div>
-            <div className="flex flex-col gap-4 bg-blue-50">
-                <div className="flex">
-                    <div>
-                    <img src={image} alt="Profile logo of pen"/>
+            <div className="flex flex-col gap-4 bg-pink-50 rounded-2xl">
+            <div class="container flex justify-center py-10">
+        <div class="p-3 bg-blue-100 rounded-xl max-h-sm w-max-lg hover:shadow">
+            <div class="flex justify-between w-full">
+                <div class="ml-2">
+                    <div class="p-3">
+                        <h3 class="text-2xl">{props.username}</h3>
                     </div>
-                    <div className="bg-blue-200 text-7xl p-4">
-                        {props.username}
-                    </div>
-                    <div className="flex justify-evenly flex-1 bg-blue-100 p-4">
-                        {tagList}
+                    <div class="flex justify-between items-center p-3 bg-white rounded-lg">
+                        <div class="mr-3"> <span class="text-gray-400 block">Tags</span> <span class="font-bold text-black text-xl">{props.tags.length}</span> </div>
+                        <div class="mr-3"> <span class="text-gray-400 block">Poems</span> <span class="font-bold text-black text-xl">{poems.length}</span> </div>
                     </div>
                 </div>
-                {poems.map(function(poem){
+            </div>
+        </div>
+    </div>
+                {
+                (poems.length > 0) ?
+                poems.map(function(poem){
                     return (<Poem content={poem.body} authors={poem.authors} title={poem.title} inProgress={poem.inProgress} key={poem.title}/>)
-                })}
+                })
+                :   (props.currentUser) ?
+                <div class = "self-center justify-center">
+
+                <div class="hidden md:flex items-center space-x-1">
+                <Link
+                    to="/collaborate"
+                    class="self-center py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300"
+                    ><h3>You have no poems! Click here to make one with a friend!</h3>
+                </Link>
+                </div>
+                </div>
+                :
+                <h3>This user has no poems!</h3>
+                }
             </div>
         </div>
     );
