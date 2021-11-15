@@ -3,7 +3,7 @@ import { ContentState, EditorState, Editor, convertToRaw, convertFromRaw } from 
 import {myContext} from "../Context";
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
-import {useLocation} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 
 import * as api from '../socket-api';
 
@@ -22,14 +22,20 @@ let exit = false;
 const DocEditor = () => {
   const location = useLocation();
   const context = useContext(myContext);
-
-  const [socket, setSocket] = useState(null);
+  const history = useHistory()
 
   let previousTitle = "";
-
   let submitButton;
 
+  const [socket, setSocket] = useState();
   const [editorState, setEditorState] = useState();
+
+  const unlisten = history.listen((location, action) => {
+    console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`);
+    console.log(`The last navigation action was ${action}`);
+    api.disconnectFromSocket(socket);
+    unlisten();
+  })
 
   const [values, setValues] = useState({
     title: previousTitle,
@@ -60,7 +66,8 @@ const DocEditor = () => {
           console.log('data returned after socket creation= ', data);
           if (data) {
             console.log('received data on socket connection', data);
-            setEditorState(data);
+            setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data.contentState))));
+            setValues({...values, title: data.title});
           } else {
             console.log('about to make post request to poemByTitleRoute');
             axios.post(poemByTitleRoute, { title: location.state.previousTitle }, { withCredentials: true })
@@ -78,10 +85,14 @@ const DocEditor = () => {
       } else {
         console.log('there is a socket, so subscribing to the editor data');
         api.subscribeToEditorData(socket,(err, data) => {
-          console.log(data);
+          console.log('data from the editor change event=', data);
           setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data))));
           setValues({...values, body: convertFromRaw(JSON.parse(data)).getPlainText()})
         });
+        api.subscribeToTitleData(socket, (err, data) => {
+          console.log('data from the title change event=', data);
+          setValues({...values, title: data});
+        })
       }
     } else {
       console.log('creating an empty editor state');
@@ -90,9 +101,19 @@ const DocEditor = () => {
     }
   }, [socket])
 
-  const handleValueChange = name => e => {
-    setValues({ ...values, [name]: e.target.value });
-  };
+  useEffect(() => {
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+
+    return function cleanup () {
+      window.removeEventListener('beforeunload', beforeUnloadHandler);
+    }
+  })
+
+  const beforeUnloadHandler = e => {
+    e.preventDefault();
+    e.returnValue = '';
+    console.log("leaving the doc editor");
+  }
 
   const onChange = (editorState) => {
     console.log('editorState=', editorState);
@@ -101,28 +122,6 @@ const DocEditor = () => {
     if (socket) {
       api.sendEditorDataChange(socket, JSON.stringify(convertToRaw(editorState.getCurrentContent())));
     }
-  }
-
-  //Function that handles the exit page button
-  const handleClick = (e) => {
-    console.log("You clicked final submit.");
-    console.log(localStorage.getItem('title'))
-    const content = localStorage.getItem('poemContent');
-    console.log(content)
-
-
-    //need to update call to finalize poem. Also it saves the message contents and not the poem contents
-    axios.post(poemUpdateRoute, {
-      title: localStorage.getItem('title'),
-      newBody: (content) ?  content : "needs some text!",
-    }).then(res => {
-      console.log(res);
-    }).catch(err => {
-      console.log(err);
-    })
-
-    exit = true;
-    //WIP
   }
 
   const handlePoemUpdate = () => {
@@ -158,8 +157,9 @@ const DocEditor = () => {
     });
   }
 
-  const handleBlockEditorChange = (textOutput) => {
-    setValues({ ...values, body: textOutput });
+  const handleTitleChange = e => {
+    setValues({...values, title: e.target.value});
+    api.sendTitleDataChange(socket, e.target.value);
   }
 
   if (workInProgress) {
@@ -233,8 +233,8 @@ const DocEditor = () => {
                           <div class="u-align-center u-text u-text-1">
                             <form>
                               <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
-                                     defaultValue={previousTitle}
-                                     onChange={handleValueChange('title')}/>
+                                     value={values.title}
+                                     onChange={handleTitleChange}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below. The color you are assigned to is:<br/>
@@ -367,8 +367,8 @@ else {
                           <div class="u-align-center u-text u-text-1">
                             <form>
                               <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
-                                     defaultValue={previousTitle}
-                                     onChange={handleValueChange('title')}/>
+                                     value={values.title}
+                                     onChange={handleTitleChange}/>
                             </form>
                           </div>
                           <p class="u-align-center u-text u-text-2">Feel free to type below! You are currently editing solo<br/>

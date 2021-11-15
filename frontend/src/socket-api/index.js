@@ -1,5 +1,12 @@
 import openSocket from 'socket.io-client';
 
+export function disconnectFromSocket(socket) {
+    if (socket) {
+        socket.emit('about to disconnect');
+        socket.disconnect();
+    }
+}
+
 export function connectToSocket(query, callback) {
     console.log("About to connect with query", query);
     const socket = openSocket('http://localhost:8081', { query: "poemTitle="+query });
@@ -13,9 +20,17 @@ export function subscribeToTimer(socket, callback) {
 }
 
 export function subscribeToEditorData(socket, callback) {
-    socket.on('message', data => callback(null, data));
+    socket.on('editor change', data => callback(null, data));
 }
 
 export function sendEditorDataChange(socket, data) {
-    socket.send(data);
+    socket.emit('editor change', data);
+}
+
+export function subscribeToTitleData(socket, callback) {
+    socket.on('title change', data => callback(null, data));
+}
+
+export function sendTitleDataChange(socket, data) {
+    socket.emit('title change', data);
 }

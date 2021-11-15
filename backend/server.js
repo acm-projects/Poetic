@@ -109,19 +109,35 @@ io.on('connection', function(socket, data) {
 
     socket.join(poemTitle);
 
-    socket.on('disconnect', () => {
-        if (!io.sockets.adapter.rooms[poemTitle] || (roomInfo[poemTitle] && io.sockets.adapter.rooms[poemTitle].length < 1)) {
+    socket.on('about to disconnect', () => {
+        console.log('about to disconnect');
+        console.log('roomInfo before disconnect=', roomInfo);
+        if (io.sockets.adapter.rooms.get(poemTitle).size <= 1) {
             delete roomInfo[poemTitle];
         }
+    })
+
+    socket.on('disconnect', () => {
         console.log('Client disconnected');
+        console.log('roomInfo after disconnect=', roomInfo);
     });
 
-    socket.on('message', (event) => {
+    socket.on('editor change', (event) => {
         console.log("Received a text change", event);
-        // console.log("this change contained the blockMap:", event["_immutable"]["currentContent"]["blockMap"]);
-        roomInfo[poemTitle] = event;
-        socket.to(poemTitle).emit('message', event);
+        console.log(roomInfo[poemTitle])
+        roomInfo[poemTitle] = roomInfo[poemTitle] ? { contentState: event, title: roomInfo[poemTitle].title } : { contentState: event, title: null };
+        socket.to(poemTitle).emit('editor change', event);
     });
+
+    socket.on('title change', (event) => {
+        console.log("received a title change", event);
+
+        roomInfo[poemTitle] = roomInfo[poemTitle] ? { contentState: roomInfo[poemTitle].contentState, title: event } : { contentState: null, title: event };
+
+        console.log(roomInfo[poemTitle]);
+
+        socket.to(poemTitle).emit('title change', event);
+    })
 });
 
 io.on('disconnect', (event) => {
