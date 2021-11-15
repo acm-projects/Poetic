@@ -5,7 +5,7 @@ const PoemScroll = (props) => {
     const [contentScroll, setContentScroll] = useState([]);
 
     props.poems.forEach(poem => {
-        contentScroll.push(<Poem content={poem.body} authors={poem.authors} title={poem.title}/>);
+        contentScroll.push(<Poem content={poem.body} authors={poem.authors} title={poem.title} key={poem.title}/>);
     });
 
     function refreshPoems() {

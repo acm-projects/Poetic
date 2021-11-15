@@ -68,7 +68,7 @@ const Profile = (props) => {
                     </div>
                 </div>
                 {poems.map(function(poem){
-                    return (<Poem content={poem.body} authors={poem.authors} title={poem.title} inProgress={poem.inProgress}/>)
+                    return (<Poem content={poem.body} authors={poem.authors} title={poem.title} inProgress={poem.inProgress} key={poem.title}/>)
                 })}
             </div>
         </div>
