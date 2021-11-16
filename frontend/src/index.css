@@ -1,8 +1,7 @@
 div.DraftEditor-root {
   height: 100%;
   width: 100%;
-  min-height: 400px;
-  max-height: 450px;
+  max-height: 800px;
   overflow-y: auto;
 }
 div.DraftEditor-editorContainer,
