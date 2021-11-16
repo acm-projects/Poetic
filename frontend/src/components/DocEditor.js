@@ -188,6 +188,7 @@ const DocEditor = () => {
   }
   if(duo) {
     return (
+      
         <div class="shadow-inner flex p-4 gap-10 justify-between bg-red-200">
           <div class="u-align-left u-clearfix u-sheet u-valign-middle u-sheet-1">
             <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
@@ -244,7 +245,7 @@ const DocEditor = () => {
                                 className="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
                                 data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500"
                                 data-animation-direction="">
-                              <div className="u-container-layout u-align-center u-container-layout-2 h-3/6">
+                              <div className="cursor-text container p-5 h-3/6 bg-white">
                                 <Editor
                                     editorState={editorState}
                                     onChange={onChange}

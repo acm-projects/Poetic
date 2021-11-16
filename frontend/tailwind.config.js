@@ -13,10 +13,16 @@ module.exports = {
       primary: '#FFE5D9',
       secondary: colors.pink,
       tertiary: '#D8E2DC'
+    },
+    extend: {
+      keyframes: {
+       wiggle: {
+         '0%, 100%': { transform: 'rotate(-3deg)' },
+         '50%': { transform: 'rotate(3deg)' },
+       },
+      }
     }
   },
-  variants: {
-    extend: {},
-  },
+  variants: {},
   plugins: [],
 }

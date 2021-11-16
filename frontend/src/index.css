@@ -1,3 +1,14 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,100,900);
+
+
+* {
+  box-sizing: inherit;
+  transition-property: all;
+  transition-duration: .6s;
+  transition-timing-function: ease;
+}
+
+
 div.DraftEditor-root {
   height: 100%;
   width: 100%;

@@ -26,32 +26,32 @@ const Navigation = () => {
 				<div class="flex space-x-7">
 					<div>
                     <Link to="/" class="flex-start items-center py-4 px-2">
-                                    <img src = {Logo} class="h-10 w-25 mr-2"/>
+                                    <img src = {Logo} class="h-10 w-25 mr-2 transform transition-all duration-300 hover:scale-110 "/>
                     </Link>
 					</div>
                     
                     <div class="hidden md:flex items-center space-x-1">
 						<Link
 							to="/collaborate"
-							class="py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300"
+							class="py-4 px-2 text-gray-500 font-semibold transform transition-all hover:-translate-y-1 duration-300 hover:text-pink-500 transition duration-300"
 							>Collaborate
                         </Link>
 					
 						<Link
 							to="/editor"
-							class="py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300"
+							class="py-4 px-2 text-gray-500 font-semibold transform transition-all hover:-translate-y-1 hover:text-pink-500 transition duration-300"
 							>Editor
                         </Link>
 
 						<Link
 							to="/Profile"
-							class="py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300"
+							class="py-4 px-2 text-gray-500 font-semibold transform transition-all hover:-translate-y-1 hover:text-pink-500 transition duration-300"
 							>Profile
                         </Link>
 
 						<Link onClick={() => logout()}
 							to="/"
-							class="py-4 px-2 text-gray-500 font-semibold hover:text-pink-500 transition duration-300">
+							class="py-4 px-2 text-gray-500 font-semibold transform transition-all hover:-translate-y-1 hover:text-pink-500 transition duration-300">
                                 Sign Out
                         </Link>
 					</div>

@@ -107,52 +107,25 @@ export default function Home() {
 
     if (isLoading) {
         return (
-            <div>
-                { context ? (
-                    <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-pink-50">
-
-                        <div className="text-5xl text-black text-bold">
-                           Welcome, {context.username}
-                        </div>
-                        <div className="flex gap-4 p-4 bg-red-400 shadow-inner">
-                            <div className="flex flex-col flex-1">
-                                <div className="bg-blue-100 rounded p-2">
-                                    Popular
-                                </div>
-                                <PoemScroll poems={allPoems}/>
-                            </div>
-                            <div className="flex flex-col flex-1">
-                                <div className="bg-green-100 rounded p-2">
-                                    Based on tags
-                                </div>
-                                <div>Loading Poems...</div>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="shadow-inner flex p-4 gap-10 justify-between bg-pink-50">
-                        <div className="self-start flex flex-col gap-4 shadow-md rounded font-bold p-4 bg-red-400">
-                            <form className="flex flex-col gap-4">
-                                <input className="rounded border border-white" type="username" placeholder="Name"
-                                       onChange={handleChange('username')}/>
-                                <input className="rounded" type="password" placeholder="Password"
-                                       onChange={handleChange('password')}/>
-                                <button onClick={handleSignUp} type='signup'
-                                        className="bg-red-900 text-white rounded focus:outline-black">Sign Up
-                                </button>
-                                <button onClick={handleLogin} type='login' className="bg-red-900 text-white rounded focus:outline-black">
-                                    Log In
-                                </button>
-                            </form>
-                        </div>
-
-                        <Main poems = {allPoems}/>
-
-                        <PoemScroll poems={allPoems}/>
-                    </div>
-                )
-                }
+            <div className="cursor-wait self-start flex flex-col gap-4 shadow-md rounded font-bold py-10 px-20 bg-gray-50">
+            Currently logged in as:
+            <div className="text-5xl text-black text-bold">
+                Loading...
             </div>
+            <div className="flex gap-4 p-4 bg-pink-50 overflow-auto h-screen shadow-inner rounded">
+                <div className="flex flex-col flex-1 gap-4">
+                    <div className="bg-blue-100 rounded p-2">
+                        Loading...
+                    </div>
+                    Waiting on Poems!
+                </div>
+                <div className="flex flex-col flex-1 gap-4">
+                    <div className="bg-blue-100 rounded p-2">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+        </div>
         )
     }
 
