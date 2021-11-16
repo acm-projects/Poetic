@@ -34,3 +34,7 @@ export function subscribeToTitleData(socket, callback) {
 export function sendTitleDataChange(socket, data) {
     socket.emit('title change', data);
 }
+
+export function sendEditorAndTitleData(socket, data) {
+    socket.emit('editor and title change', data);
+}
