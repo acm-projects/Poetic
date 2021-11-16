@@ -45,11 +45,11 @@ const Poem = (props) => {
 
     if (props.inProgress) {
         return (
-            <div class="flex flex-col justify-between text-center hover:bg-gray-100 py-5 font-light bg-white h-38 w-25 rounded-md">
+            <div class="flex flex-col justify-between text-center hover:bg-gray-50 py-5 font-light bg-white h-38 w-25 rounded-md">
                 <div class="rounded bg-secondary flex justify-start px-4">
-                    <h3 class = "transform transition-all duration-300 hover:scale-110" >{props.title}</h3>
+                    <h3 class = "transform transition-all duration-300 hover:scale-105" >{props.title}</h3>
                 </div>
-                <div class="flex-1 py-10 hover:underline">
+                <div class="flex-1 py-10 hover:text-gray-500">
                     {props.content.substr(0, 500) + "..."}
                 </div>
                 <div class="rounded bg-primary flex justify-end px-4">
@@ -67,19 +67,19 @@ const Poem = (props) => {
     }
 
     return (
-        <div class="flex flex-col justify-between text-center hover:bg-tertiary font-light bg-white h-38 w-25 rounded-md">
-            <div class="rounded bg-blue-50 flex justify-start px-4">
-                {props.title}
-            </div>
-            <div class="flex-1 py-10 hover:text-gray-500 hover:animate-pulse transition ease-in duration-400">
-                {props.content.substr(0, 500) + "..."}
-            </div>
-            <div class="rounded bg-blue-50 flex justify-end px-4">
-                <div>
-                    {authorsProcessed}
-                </div>
+        <div class="flex flex-col justify-between text-center hover:bg-gray-50 py-5 font-light bg-white h-38 w-25 rounded-md">
+        <div class="rounded bg-secondary flex justify-start px-4">
+            <h3 class = "transform transition-all duration-300 hover:scale-105" >{props.title}</h3>
+        </div>
+        <div class="flex-1 py-10 hover:text-gray-500">
+            {props.content.substr(0, 500) + "..."}
+        </div>
+        <div class="rounded bg-primary flex justify-end px-4">
+            <div>
+                {authorsProcessed}
             </div>
         </div>
+    </div>
     );
 }
 

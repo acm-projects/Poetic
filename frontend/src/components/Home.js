@@ -32,6 +32,7 @@ export default function Home() {
                 console.log("Retrieving poems");
                 console.log(res.data);
                 setAllPoems(res.data);
+                setLoading(false);
             })
             .catch(err => {
                 console.log(err);

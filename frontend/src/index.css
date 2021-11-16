@@ -1,6 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,100,900);
 
-
+html *{
+  font-family: 'Georgia' !important;
+}
 * {
   box-sizing: inherit;
   transition-property: all;
@@ -903,15 +905,6 @@ span.fr-img-caption.fr-view {
       float: right;
       margin: 5px 0 5px 5px;
       max-width: calc(100% - 5px); }
-/*end-commonstyles library*//*begin-commonstyles library*/@charset "UTF-8";
-
-/*!
- * animate.css -https://daneden.github.io/animate.css/
- * Version - 3.7.2
- * Licensed under the MIT license - http://opensource.org/licenses/MIT
- *
- * Copyright (c) 2019 Daniel Eden
- */
 
 @-webkit-keyframes bounce {
   from,
