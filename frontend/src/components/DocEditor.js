@@ -6,6 +6,7 @@ import axios from 'axios';
 import {useHistory, useLocation} from "react-router-dom";
 
 import * as api from '../socket-api';
+import {useAlert} from "react-alert";
 
 const poemCreateRoute = 'http://localhost:8081/api/poems/'
 const poemUpdateRoute = 'http://localhost:8081/api/poems/update'
@@ -23,11 +24,12 @@ const DocEditor = () => {
   const location = useLocation();
   const context = useContext(myContext);
   const history = useHistory()
+  const alert = useAlert();
 
   let previousTitle = "";
   let submitButton;
 
-  const [socket, setSocket] = useState();
+  const [socket, setSocket] = useState(null);
   const [editorState, setEditorState] = useState();
 
   const unlisten = history.listen((location, action) => {
@@ -75,6 +77,10 @@ const DocEditor = () => {
                   console.log('post received after call to poemByTitleRoute', res);
                   setValues({ title: res.data.title, body: res.data.body, tags: res.data.tags, authors: res.data.authors, inProgress: res.data.inProgress });
                   setEditorState(EditorState.createWithContent(ContentState.createFromText(res.data.body)));
+                  api.sendEditorAndTitleData(newSocket, {
+                    title: res.data.title,
+                    contentState: JSON.stringify(convertToRaw(ContentState.createFromText(res.data.body)))
+                  });
                 }).catch(err => {
                   console.log(err);
                 });
@@ -87,12 +93,12 @@ const DocEditor = () => {
         api.subscribeToEditorData(socket,(err, data) => {
           console.log('data from the editor change event=', data);
           setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data))));
-          setValues({...values, body: convertFromRaw(JSON.parse(data)).getPlainText()})
+          setValues({...values, title: values.title, body: convertFromRaw(JSON.parse(data)).getPlainText()})
         });
         api.subscribeToTitleData(socket, (err, data) => {
           console.log('data from the title change event=', data);
           setValues({...values, title: data});
-        })
+        });
       }
     } else {
       console.log('creating an empty editor state');
@@ -134,8 +140,10 @@ const DocEditor = () => {
       body: values.body,
     }, { withCredentials: true }).then(res => {
       console.log(res);
+      alert.show("Poem updated successfully.");
     }).catch(err => {
       console.log(err);
+      alert.show("Poem updating failed.");
     });
   }
 
@@ -152,14 +160,18 @@ const DocEditor = () => {
       inProgress: true
     }, { withCredentials: true }).then(res => {
       console.log(res);
+      alert.show("Poem submitted successfully.");
     }).catch(err => {
       console.log(err);
+      alert.show("Poem submission failed.");
     });
   }
 
   const handleTitleChange = e => {
     setValues({...values, title: e.target.value});
-    api.sendTitleDataChange(socket, e.target.value);
+    if (socket) {
+      api.sendTitleDataChange(socket, e.target.value);
+    }
   }
 
   if (workInProgress) {

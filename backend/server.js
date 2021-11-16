@@ -138,6 +138,14 @@ io.on('connection', function(socket, data) {
 
         socket.to(poemTitle).emit('title change', event);
     })
+
+    socket.on('editor and title change', (event => {
+        console.log("received editor and title change", event);
+
+        roomInfo[poemTitle] = event;
+
+        console.log(roomInfo[poemTitle]);
+    }))
 });
 
 io.on('disconnect', (event) => {
