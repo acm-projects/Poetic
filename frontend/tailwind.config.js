@@ -9,6 +9,8 @@ module.exports = {
       gray: colors.coolGray,
       blue: colors.lightBlue,
       red: colors.rose,
+      amber: colors.amber,
+      orange: color.orange,
       pink: '#FBE6FE',
       primary: '#FFE5D9',
       secondary: colors.pink,

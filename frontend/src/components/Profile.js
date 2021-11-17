@@ -61,9 +61,9 @@ const Profile = (props) => {
     return (
         <div>
             <div className="flex flex-col gap-4 bg-pink-50 rounded-2xl">
-            <div class="container flex justify-center py-10">
-        <div class="p-3 bg-blue-100 rounded-xl max-h-sm w-max-lg hover:shadow">
-            <div class="flex justify-between w-full">
+            <div class="container flex justify-center self-center py-10">
+        <div class="p-3 bg-blue-100 rounded-xl max-h-sm w-max-xl hover:shadow">
+            <div class="flex justify-center w-full">
                 <div class="ml-2">
                     <div class="p-3">
                         <h3 class="text-2xl hover:text-gray-500">{props.username}</h3>
@@ -75,7 +75,7 @@ const Profile = (props) => {
                     </div>
                 </div>
             </div>
-            <div class = "py-5 justify-center self-center"> {(context.tags) ? <div class = "container flex justify-center gap-2"> {tagList} </div> : <p>You do not have any tags</p>} </div>
+            <div class = "py-5 justify-center self-center"> {(context.tags) ? <div class = "container flex justify-center gap-1"> {tagList} </div> : <p>You do not have any tags</p>} </div>
         </div>
     </div>
                 {

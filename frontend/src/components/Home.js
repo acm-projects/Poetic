@@ -168,6 +168,7 @@ export default function Home() {
                             <div className="bg-blue-100 rounded p-2">
                                 Based on your tags
                             </div>
+                            {console.log(poemsByTags)}
                             <PoemScroll poems={poemsByTags}/> {/*{(context.tags.length > 0) ? <PoemScroll poems={poemsByTags}/> : <p>You have no tags selected!</p>}*/}
                         </div>
                     </div>
