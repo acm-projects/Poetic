@@ -7,6 +7,7 @@ import {myContext} from "../Context";
 
 const Collaborate = () => {
     const allUsersRoute = configData.SERVER_URL + "/users/";
+    const allUsersByCompatibilityRoute = configData.SERVER_URL + "/users/compatibility_all";
     const [currentUser, setCurrentUser] = useState(0);
     const [users, setUsers] = useState([]);
     const [usersPoemTags, setUsersPoemTags] = useState(null);
@@ -41,9 +42,9 @@ const Collaborate = () => {
     }
 
     useEffect(() => {
-        axios.get(allUsersRoute, { withCredentials: true })
+        axios.post(allUsersByCompatibilityRoute, { conditions: { proximityWeight: 1 } }, { withCredentials: true})
             .then(res => {
-                console.log(res.data);
+                console.log("response from the compatibility route call=", res);
                 for (let i = 0; i < res.data.length; i++) {
                     if (res.data[i].username == context.username) {
                         res.data.splice(i, 1);
@@ -52,12 +53,14 @@ const Collaborate = () => {
                 }
                 setUsers(res.data);
                 setUsersPoemTags(res.data.map(function(user){
-                    return (<Profile key={user.username} username={user.username} tags={user.tags}/>)}));
+                    return (<Profile noEditing={true} key={user.username} username={user.username} tags={user.tags}/>);
+                }));
                 setLoading(false);
             })
             .catch(err => {
-                console.error(err);
-            });
+                console.error("error response from the compatibility route call=", err);
+            })
+
     }, []);
 
     function createWithUser() {

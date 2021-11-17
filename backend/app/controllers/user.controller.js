@@ -133,7 +133,6 @@ exports.getCompatibility = (req, res) => {
             if(!user) {
                 res.status(404).send({ message: "Did not find User with username " + username });
             } else {
-                // console.log(user.poems);
                 const poems = user.poems;
                 Poem.find({ title: { $in: poems } })
                     .then(data => {
@@ -153,6 +152,50 @@ exports.getCompatibility = (req, res) => {
                 message: err.message || "Error retrieving user by username."
             });
         });
+}
+
+/**
+ * @param req
+ * @param {User} req.user
+ * @param req.body
+ * @param req.body.conditions
+ * @param {int} req.body.conditions.proximityWeight
+ * @param res
+ */
+exports.findUsersSortedByCompatibility = (req, res) => {
+    const conditions = req.body.conditions;
+
+    if (!conditions) {
+        res.status(400).send({ message: "Contents cannot be empty."});
+        return;
+    }
+
+    User.aggregate([
+        {
+            $project: { password: 0 }
+        }, {
+            $addFields: {
+                compatibilityScore: 0
+            }
+        }])
+        .then( async allUsers => {
+            for (let i = 0; i < allUsers.length; i++) {
+                const poemTitles = allUsers[i].poems;
+                const allPoemTags = [];
+                let poems = await Poem.find({ title: { $in: poemTitles } });
+                poems.forEach(poem => poem.tags.forEach(tag => allPoemTags.push(tag)));
+                allUsers[i].compatibilityScore = compatibilityScore(req.user, allUsers[i], allPoemTags, conditions);
+            }
+            allUsers.sort((a,b) => {
+                return b.compatibilityScore - a.compatibilityScore;
+            });
+            res.send(allUsers);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Error retrieving all users."
+            });
+        })
 }
 
 /**

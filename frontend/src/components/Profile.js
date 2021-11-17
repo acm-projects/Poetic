@@ -81,7 +81,8 @@ const Profile = (props) => {
                 {
                 (poems.length > 0) ?
                 poems.map(function(poem){
-                    return (<Poem content={poem.body} authors={poem.authors} title={poem.title} tags={poem.tags} inProgress={poem.inProgress} key={poem.title}/>)
+                    return props.noEditing ? (<Poem content={poem.body} authors={poem.authors} title={poem.title} tags={poem.tags} inProgress={false} key={poem.title}/>) :
+                                             (<Poem content={poem.body} authors={poem.authors} title={poem.title} tags={poem.tags} inProgress={poem.inProgress} key={poem.title}/>)
                 })
                 :   (props.currentUser) ?
                 <div class = "self-center justify-center">

@@ -11,7 +11,7 @@ const ProfilePage = (props) => {
     const context = useContext(myContext);
     return (
         <div>
-            <Profile username={context.username} tags={context.tags} currentUser = {true}/>
+            <Profile noEditing={false} username={context.username} tags={context.tags} currentUser = {true}/>
         </div>
     );
 }

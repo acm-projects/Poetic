@@ -15,14 +15,17 @@ module.exports = app => {
     // POST path to get the compatibility score between the user logged in and a user found from the username
     router.post("/compatibility/:username", isAuthenticated, userController.getCompatibility);
 
+    // POST path to get all users sorted by their compatibility with the user logged in
+    router.post("/compatibility_all", userController.findUsersSortedByCompatibility);
+
     app.use("/api/users", router)
 }
 
 // Checking if the request has a user that is authenticated or not.
-function isAuthenticated(req,res,done) {
+function isAuthenticated(req,res,next) {
     if(req.user) {
         console.log(req.user);
-        return done();
+        return next;
     }
     return res.status(401).send("Error: not logged in.");
 }
