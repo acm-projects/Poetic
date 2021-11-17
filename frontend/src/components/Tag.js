@@ -4,7 +4,7 @@ const Tag = (props) => {
     let c = '';
 
     if(props.content == "Developer") {
-        c = "bg-yellow-100 focus:outline-black hover:bg-yellow-200 rounded p-4";
+        c = "bg-yellow-100 focus:outline-black hover:bg-yellow-200 rounded p-4 transform transition-all duration-300 hover:-skew-y-6 hover:skew-x-6";
     } else if (props.content == "Expert") {
         c = "bg-red-200 focus:outline-black hover:bg-red-300 rounded p-4";
     } else if (props.content == "Sad") {
