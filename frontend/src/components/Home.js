@@ -16,22 +16,21 @@ export default function Home() {
     const [userTags, setUserTags] = useState([]);
 
     const getUserTags = async (poemByUserRoute) => {
-        const userTags = [];
-        await axios.get(poemByUserRoute, { withCredentials: true })
-            .then(res => {
-                console.log("found poems");
-                console.log(res.data);
-                res.data.forEach(poem => poem.tags.forEach(tag => userTags.push(tag)));
-            })
-            .catch(err => {
-                console.error(err);
-            });
-        console.log("the tags are ");
-        console.log(userTags);
-        await axios.post(configData.SERVER_URL + "/poems/tags/", {tags: ["foo"]})
+        // const userTags = [];
+        // await axios.get(poemByUserRoute, { withCredentials: true })
+        //     .then(res => {
+        //         console.log("found poems");
+        //         console.log(res.data);
+        //         res.data.forEach(poem => poem.tags.forEach(tag => userTags.push(tag)));
+        //     })
+        //     .catch(err => {
+        //         console.error(err);
+        //     });
+        // console.log("the tags aggregated from the user's poems=", userTags);
+        console.log("the user's literal tags=", context.tags);
+        await axios.post(configData.SERVER_URL + "/poems/tags/", {tags: context.tags})
         .then(res => {
-            console.log("Posting api/poems/tags to get the poems a user would be interested in.");
-            console.log(res.data);
+            console.log("Resulting data from posting api/poems/tags=", res.data);
             setPoemsByTags(res.data);
         })
         .catch(err => {
@@ -42,8 +41,8 @@ export default function Home() {
     useEffect(() => {
         if (context) {
             const poemByUserRoute = configData.SERVER_URL + "/poems/user/" + context.username;
-            getUserTags(poemByUserRoute);
-            setLoading(false);
+            getUserTags(poemByUserRoute).then(() => setLoading(false));
+            // setLoading(false);
         }
 
         // Needs to be changed to completed poems, but there are no completed poems yet
@@ -169,7 +168,7 @@ export default function Home() {
                             <div className="bg-blue-100 rounded p-2">
                                 Based on your tags
                             </div>
-                            {(context.tags.length > 0) ? <PoemScroll poems={poemsByTags}/> : <p>You have no tags selected!</p>}
+                            <PoemScroll poems={poemsByTags}/> {/*{(context.tags.length > 0) ? <PoemScroll poems={poemsByTags}/> : <p>You have no tags selected!</p>}*/}
                         </div>
                     </div>
                 </div>
