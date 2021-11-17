@@ -88,7 +88,7 @@ const Poem = (props) => {
                 {tagsList}
         </div>
         <div class="rounded bg-primary flex justify-end px-4">
-            <div>
+            <div class = "hover:text-gray-500">
                 {authorsProcessed}
             </div>
         </div>

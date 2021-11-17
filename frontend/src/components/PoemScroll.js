@@ -30,9 +30,7 @@ const PoemScroll = (props) => {
     return (
         <div class="flex flex-col py-5 h-screen overflow-auto gap-4 flex-1">
             {getPoems()}
-            {(contentScroll.length > 0) ? <button class="bg-red-100 rounded p-4 hover:bg-red-300" onClick={refreshPoems}>Load More</button> : console.log('No poems found' + contentScroll)}
-            <button class="bg-red-100 rounded p-4 hover:bg-red-300" onClick={refreshPoems}>Load More</button>
-
+            {(contentScroll.length > 0) ? <button class="bg-red-100 rounded p-4 hover:bg-red-300" onClick={refreshPoems}>Load More</button> : <h3>No poems found!</h3>}
         </div>
     )
 }
