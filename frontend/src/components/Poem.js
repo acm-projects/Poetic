@@ -1,6 +1,8 @@
 import React, {useContext} from "react";
 import {myContext} from "../Context";
 import {useHistory} from "react-router-dom";
+import Tag from "./Tag";
+import { Chip } from "@mui/material";
 
 const Poem = (props) => {
 
@@ -12,6 +14,11 @@ const Poem = (props) => {
     for (const author of props.authors) {
         authorsProcessed += author + ", ";
     }
+
+    const tagsList = [];
+    props.tags.forEach(tag => {
+        tagsList.push(<Chip label={tag}/>);
+    })
 
     authorsProcessed = authorsProcessed.substr(0, authorsProcessed.length-2);
 
@@ -52,6 +59,9 @@ const Poem = (props) => {
                 <div class="flex-1 py-10 hover:underline">
                     {props.content}
                 </div>
+                <div class="flex p-2 gap-2"> 
+                {tagsList}
+                </div>
                 <div class="rounded bg-primary flex justify-end px-4">
                     <div>
                         {authorsProcessed}
@@ -73,6 +83,9 @@ const Poem = (props) => {
             </div>
             <div class="flex-1 py-10 hover:underline">
                 {props.content}
+            </div>
+            <div class="flex p-2 gap-2"> 
+                {tagsList}
             </div>
             <div class="rounded bg-blue-50 flex justify-end px-4">
                 <div>

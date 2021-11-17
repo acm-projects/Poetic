@@ -11,19 +11,39 @@ export default function Home() {
     const [isLoading, setLoading] = useState(true);
     const [poemsByTags, setPoemsByTags] = useState([]);
     const [allPoems, setAllPoems] = useState([]);
+    const [poems, setPoems] = useState([]);
+    const [foundTags, setFoundTags] = useState(false);
+    const [userTags, setUserTags] = useState([]);
+
+    const getUserTags = async (poemByUserRoute) => {
+        const userTags = [];
+        await axios.get(poemByUserRoute, { withCredentials: true })
+            .then(res => {
+                console.log("found poems");
+                console.log(res.data);
+                res.data.forEach(poem => poem.tags.forEach(tag => userTags.push(tag)));
+            })
+            .catch(err => {
+                console.error(err);
+            });
+        console.log("the tags are ");
+        console.log(userTags);
+        await axios.post(configData.SERVER_URL + "/poems/tags/", {tags: ["foo"]})
+        .then(res => {
+            console.log("Posting api/poems/tags to get the poems a user would be interested in.");
+            console.log(res.data);
+            setPoemsByTags(res.data);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }
 
     useEffect(() => {
         if (context) {
-            axios.post(configData.SERVER_URL + "/poems/tags", {tags: context.tags})
-                .then(res => {
-                    console.log("Posting api/poems/tags to get the poems a user would be interested in.");
-                    console.log(res.data);
-                    setPoemsByTags(res.data);
-                    setLoading(false);
-                })
-                .catch(err => {
-                    console.error(err);
-                });
+            const poemByUserRoute = configData.SERVER_URL + "/poems/user/" + context.username;
+            getUserTags(poemByUserRoute);
+            setLoading(false);
         }
 
         // Needs to be changed to completed poems, but there are no completed poems yet

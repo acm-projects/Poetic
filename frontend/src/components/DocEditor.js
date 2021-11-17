@@ -4,6 +4,7 @@ import {myContext} from "../Context";
 import 'draft-js/dist/Draft.css';
 import axios from 'axios';
 import {useHistory, useLocation} from "react-router-dom";
+import TagSelector from './TagSelector';
 
 import * as api from '../socket-api';
 import {useAlert} from "react-alert";
@@ -130,6 +131,11 @@ const DocEditor = () => {
     }
   }
 
+  const handleTagChange = (event, value) => {
+      console.log(value);
+      setValues({...values, tags: value});
+  }
+
   const handlePoemUpdate = () => {
     console.log("going to update this poem:");
     console.log("values=");
@@ -138,6 +144,7 @@ const DocEditor = () => {
       previousTitle: previousTitle,
       newTitle: values.title,
       body: values.body,
+      tags: values.tags,
     }, { withCredentials: true }).then(res => {
       console.log(res);
       alert.show("Poem updated successfully.");
@@ -254,7 +261,7 @@ const DocEditor = () => {
                           </p>
                           <h5 class="u-align-center u-text u-text-custom-color-2 u-text-3" data-animation-name="pulse" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""> &lt;color&gt;</h5>
                             <div
-                                className="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
+                                className="flex flex-col u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
                                 data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500"
                                 data-animation-direction="">
                               <div className="u-container-layout u-container-layout-2 h-3/6">
@@ -274,6 +281,7 @@ const DocEditor = () => {
                                     }}
                                 />
                               </div>
+                              <TagSelector handleTagChange={handleTagChange}/>
                             </div>
                         </div>
                       </div>
@@ -387,7 +395,7 @@ else {
                             <span class="u-text-custom-color-2"></span>
                           </p>
                           <div
-                              className="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
+                              className="flex flex-col u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
                               data-animation-name="zoomIn" data-animation-duration="1000" data-animation-delay="1500"
                               data-animation-direction="">
                             <div className="u-container-layout u-container-layout-2 h-3/6">
@@ -407,6 +415,7 @@ else {
                                   }}
                               />
                             </div>
+                            <TagSelector handleTagChange={handleTagChange}/>
                           </div>
                         </div>
                       </div>

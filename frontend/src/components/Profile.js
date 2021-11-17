@@ -7,6 +7,8 @@ import configData from "../config.json";
 import image from "../resources/profileimage.png";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
+import Chip from '@mui/material/Chip';
+import TagSelector from "./TagSelector";
 
 const Profile = (props) => {
     const context = useContext(myContext);
@@ -77,7 +79,7 @@ const Profile = (props) => {
                 {
                 (poems.length > 0) ?
                 poems.map(function(poem){
-                    return (<Poem content={poem.body} authors={poem.authors} title={poem.title} inProgress={poem.inProgress} key={poem.title}/>)
+                    return (<Poem content={poem.body} authors={poem.authors} title={poem.title} tags={poem.tags} inProgress={poem.inProgress} key={poem.title}/>)
                 })
                 :   (props.currentUser) ?
                 <div class = "self-center justify-center">
