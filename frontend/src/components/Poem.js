@@ -52,12 +52,12 @@ const Poem = (props) => {
 
     if (props.inProgress) {
         return (
-            <div class="flex flex-col justify-between text-center hover:bg-gray-100 py-5 font-light bg-white h-38 w-25 rounded">
+            <div class="flex flex-col justify-between text-center hover:bg-gray-50 py-5 font-light bg-white h-38 w-25 rounded-md">
                 <div class="rounded bg-secondary flex justify-start px-4">
-                    <h3>{props.title}</h3>
+                    <h3 class = "transform transition-all duration-300 hover:scale-105" >{props.title}</h3>
                 </div>
-                <div class="flex-1 py-10 hover:underline">
-                    {props.content}
+                <div class="flex-1 py-10 hover:text-gray-500">
+                    {props.content.substr(0, 500) + "..."}
                 </div>
                 <div class="flex p-2 gap-2"> 
                 {tagsList}
@@ -68,7 +68,7 @@ const Poem = (props) => {
                     </div>
                 </div>
                 <button
-                        class= "w-full self-center h-12 rounded-md bg-pink-100 border-2 max-w-lg text-md hover:shadow hover:bg-red-100 hover:border-pink-700 hover:text-black"
+                        class= "btn btn-1 w-full self-center h-12 rounded-md bg-pink-100 border-2 max-w-lg text-md hover:shadow hover:bg-red-100 hover:border-pink-700 hover:text-black"
                         onClick={createWithUser}>
                         Edit
                 </button>
@@ -77,22 +77,22 @@ const Poem = (props) => {
     }
 
     return (
-        <div class="flex flex-col justify-between text-center hover:bg-tertiary font-light bg-white h-38 w-25 rounded">
-            <div class="rounded bg-blue-50 flex justify-start px-4">
-                {props.title}
-            </div>
-            <div class="flex-1 py-10 hover:underline">
-                {props.content}
-            </div>
-            <div class="flex p-2 gap-2"> 
+        <div class="flex flex-col justify-between text-center hover:bg-gray-50 py-5 font-light bg-white h-38 w-25 rounded-md">
+        <div class="rounded bg-secondary flex justify-start px-4">
+            <h3 class = "transform transition-all duration-300 hover:scale-105" >{props.title}</h3>
+        </div>
+        <div class="flex-1 py-10 hover:text-gray-500">
+            {props.content.substr(0, 500) + "..."}
+        </div>
+        <div class="flex p-2 gap-2"> 
                 {tagsList}
-            </div>
-            <div class="rounded bg-blue-50 flex justify-end px-4">
-                <div>
-                    {authorsProcessed}
-                </div>
+        </div>
+        <div class="rounded bg-primary flex justify-end px-4">
+            <div>
+                {authorsProcessed}
             </div>
         </div>
+    </div>
     );
 }
 
