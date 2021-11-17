@@ -69,7 +69,7 @@ const Profile = (props) => {
                         <h3 class="text-2xl hover:text-gray-500">{props.username}</h3>
                     </div>
                     <div class="flex justify-between items-center p-3 bg-white rounded-lg">
-                        <div class="mr-3"> <span class="text-gray-400 block">Tags</span> <span class="font-bold text-black text-xl">{props.tags.length}</span> </div>
+                        <div class="mr-3"> <span class="text-gray-400 block">Tags</span> <span class="font-bold text-black text-xl">{props.tags.length} {(context.tags) ? console.log(context.tags) : <p>You do not have any tags</p>}</span> </div>
                         <div class="mr-3"> <span class="text-gray-400 block">Poems</span> <span class="font-bold text-black text-xl">{poems.length}</span> </div>
                     </div>
                 </div>
