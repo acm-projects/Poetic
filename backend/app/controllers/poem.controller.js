@@ -284,17 +284,18 @@ exports.updatePoemTitle = (req, res) => {
  *
  * @param {string} req.body.previousTitle The previous (current) title of the poem
  * @param {string} req.body.newTitle The new title of the poem to set it to
- * @param {string} req.body.body
+ * @param {string} req.body.body The new body of the poem
+ * @param {string[]} req.body.tags The new tags of the poem
  * @param res
  */
 exports.updatePoem = (req, res) => {
-    if (!req.body.previousTitle || !req.body.newTitle || !req.body.body) {
+    if (!req.body.previousTitle || !req.body.newTitle || !req.body.body || !req.body.tags) {
         res.status(400).send({ message: "Contents missing."});
         return;
     }
 
     Poem.updateOne({ title: req.body.previousTitle}, {
-        $set : { title: req.body.newTitle, body: req.body.body },
+        $set : { title: req.body.newTitle, body: req.body.body, tags: req.body.tags },
     })
         .then(data1 => {
             Poem.findOne({ title: req.body.newTitle })
