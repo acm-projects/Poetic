@@ -211,7 +211,7 @@ exports.findPoemsByTags = (req, res) => {
             {
                 $redact: {
                     $cond: {
-                        if: { $and: [ { $gte:[ { $size:"$matchingElements" }, 1 ] }, { $not: "$inProgress" } ] },
+                        if:  { $gte:[ { $size:"$matchingElements" }, 1 ] },
                         then: "$$KEEP",
                         else: "$$PRUNE"
                     }
