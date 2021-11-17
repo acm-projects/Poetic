@@ -259,6 +259,7 @@ const DocEditor = () => {
                             </form>
               </div>
               </h1>
+              <TagSelector handleTagChange={handleTagChange}/>
                           <h5 class="u-align-center u-container-style u-text u-text-custom-color-2 u-text-3" data-animation-name="pulse" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""></h5>
                             <div
                                 className="flex flex-col u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
@@ -282,7 +283,6 @@ const DocEditor = () => {
                                     }}
                                 />
                               </div>
-                              <TagSelector handleTagChange={handleTagChange}/>
                             </div>
                         </div>
                       </div>
@@ -403,6 +403,7 @@ else {
                         </form>
           </div>
           </h1>
+          <TagSelector handleTagChange={handleTagChange}/>
                       <h5 class="u-align-center u-container-style u-text u-text-custom-color-2 u-text-3" data-animation-name="pulse" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""></h5>
                         <div
                             className="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
@@ -425,7 +426,6 @@ else {
                                   history: {inDropdown: true},
                                 }}
                             />
-                            <TagSelector handleTagChange={handleTagChange}/>
                           </div>
                         </div>                 
                     </div>

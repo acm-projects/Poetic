@@ -57,7 +57,7 @@ const Poem = (props) => {
                     <h3 class = "transform transition-all duration-300 hover:scale-105" >{props.title}</h3>
                 </div>
                 <div class="flex-1 py-10 hover:text-gray-500">
-                    {props.content.substr(0, 500) + "..."}
+                    {(props.content.length > 500) ? props.content.substr(0, 500) + "..." : props.content}
                 </div>
                 <div class="flex p-2 gap-2"> 
                 {tagsList}
@@ -82,7 +82,7 @@ const Poem = (props) => {
             <h3 class = "transform transition-all duration-300 hover:scale-105" >{props.title}</h3>
         </div>
         <div class="flex-1 py-10 hover:text-gray-500">
-            {props.content.substr(0, 500) + "..."}
+            {(props.content.length > 500) ? props.content.substr(0, 500) + "..." : props.content}
         </div>
         <div class="flex p-2 gap-2"> 
                 {tagsList}
