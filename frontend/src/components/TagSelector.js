@@ -16,7 +16,7 @@ const TagSelector = (props) => {
           <TextField
             {...params}
             variant="outlined"
-            label="Choose User Tags"
+            label="Choose Poem Tags"
           />
         )}
       />

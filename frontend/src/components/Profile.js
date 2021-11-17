@@ -69,11 +69,13 @@ const Profile = (props) => {
                         <h3 class="text-2xl hover:text-gray-500">{props.username}</h3>
                     </div>
                     <div class="flex justify-between items-center p-3 bg-white rounded-lg">
-                        <div class="mr-3"> <span class="text-gray-400 block">Tags</span> <span class="font-bold text-black text-xl">{props.tags.length} {(context.tags) ? console.log(context.tags) : <p>You do not have any tags</p>}</span> </div>
+                        <div class="mr-3"> <span class="text-gray-400 block">Tags</span> <span class="font-bold text-black text-xl">{props.tags.length}</span> </div>
                         <div class="mr-3"> <span class="text-gray-400 block">Poems</span> <span class="font-bold text-black text-xl">{poems.length}</span> </div>
+                        
                     </div>
                 </div>
             </div>
+            <div class = "py-5 justify-center self-center"> {(context.tags) ? <div class = "container flex justify-center gap-2"> {tagList} </div> : <p>You do not have any tags</p>} </div>
         </div>
     </div>
                 {
@@ -83,7 +85,6 @@ const Profile = (props) => {
                 })
                 :   (props.currentUser) ?
                 <div class = "self-center justify-center">
-
                 <div class="hidden md:flex items-center space-x-1">
                 <Link
                     to="/collaborate"
