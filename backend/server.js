@@ -125,22 +125,31 @@ io.on('connection', function(socket, data) {
     socket.on('editor change', (event) => {
         console.log("Received a text change", event);
         console.log(roomInfo[poemTitle])
-        roomInfo[poemTitle] = roomInfo[poemTitle] ? { contentState: event, title: roomInfo[poemTitle].title } : { contentState: event, title: null };
+        roomInfo[poemTitle] ? roomInfo[poemTitle].contentState = event : null;
+        // roomInfo[poemTitle] = roomInfo[poemTitle] ? { contentState: event, title: roomInfo[poemTitle].title } : { contentState: event, title: null };
         socket.to(poemTitle).emit('editor change', event);
     });
 
     socket.on('title change', (event) => {
         console.log("received a title change", event);
 
-        roomInfo[poemTitle] = roomInfo[poemTitle] ? { contentState: roomInfo[poemTitle].contentState, title: event } : { contentState: null, title: event };
+        roomInfo[poemTitle] ? (roomInfo[poemTitle].title = event) : null; // = roomInfo[poemTitle] ? { contentState: roomInfo[poemTitle].contentState, title: event } : { contentState: null, title: event };
 
         console.log(roomInfo[poemTitle]);
 
         socket.to(poemTitle).emit('title change', event);
     })
 
-    socket.on('editor and title change', (event => {
-        console.log("received editor and title change", event);
+    socket.on('tags change', (event) => {
+        console.log("received a tag change", event);
+
+        roomInfo ? (roomInfo[poemTitle].tags = event) : null;
+
+        socket.to(poemTitle).emit('tags change', event);
+    })
+
+    socket.on('editor and title and tags change', (event => {
+        console.log("received editor and title and tags change", event);
 
         roomInfo[poemTitle] = event;
 

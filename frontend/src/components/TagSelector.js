@@ -12,6 +12,7 @@ const TagSelector = (props) => {
         id="tags-outlined"
         options={["Sonnet", "Haiku", "Limmerick", "Rhyming", "Sad", "Happy", "Imagery", "Free Verse", "Nature"]}
         onChange={(event, value) => props.handleTagChange(event, value)}
+        value={props.value}
         renderInput={(params) => (
           <TextField
             {...params}

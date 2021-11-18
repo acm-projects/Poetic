@@ -35,6 +35,14 @@ export function sendTitleDataChange(socket, data) {
     socket.emit('title change', data);
 }
 
-export function sendEditorAndTitleData(socket, data) {
-    socket.emit('editor and title change', data);
+export function subscribeToTagData(socket, callback) {
+    socket.on('tags change', data => callback(null, data));
+}
+
+export function sendTagDataChange(socket, data) {
+    socket.emit('tags change', data);
+}
+
+export function sendEditorAndTitleAndTagsData(socket, data) {
+    socket.emit('editor and title and tags change', data);
 }

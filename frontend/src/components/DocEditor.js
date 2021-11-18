@@ -48,6 +48,10 @@ const DocEditor = () => {
     inProgress: true
   });
 
+  const [title, setTitle] = useState(previousTitle);
+
+  const [tags, setTags] = useState([]);
+
   if (location.state) {
     username2 = location.state.matchedUser;
     workInProgress = location.state.inProgress;
@@ -70,17 +74,21 @@ const DocEditor = () => {
           if (data) {
             console.log('received data on socket connection', data);
             setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data.contentState))));
-            setValues({...values, title: data.title});
+            setTitle(data.title);
+            setTags(data.tags);
           } else {
             console.log('about to make post request to poemByTitleRoute');
             axios.post(poemByTitleRoute, { title: location.state.previousTitle }, { withCredentials: true })
                 .then(res => {
                   console.log('post received after call to poemByTitleRoute', res);
-                  setValues({ title: res.data.title, body: res.data.body, tags: res.data.tags, authors: res.data.authors, inProgress: res.data.inProgress });
+                  setTitle(res.data.title);
+                  setTags(res.data.tags);
+                  setValues({...values, body: res.data.body, authors: res.data.authors, inProgress: res.data.inProgress });
                   setEditorState(EditorState.createWithContent(ContentState.createFromText(res.data.body)));
-                  api.sendEditorAndTitleData(newSocket, {
+                  api.sendEditorAndTitleAndTagsData(newSocket, {
                     title: res.data.title,
-                    contentState: JSON.stringify(convertToRaw(ContentState.createFromText(res.data.body)))
+                    contentState: JSON.stringify(convertToRaw(ContentState.createFromText(res.data.body))),
+                    tags: res.data.tags
                   });
                 }).catch(err => {
                   console.log(err);
@@ -94,12 +102,16 @@ const DocEditor = () => {
         api.subscribeToEditorData(socket,(err, data) => {
           console.log('data from the editor change event=', data);
           setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(data))));
-          setValues({...values, title: values.title, body: convertFromRaw(JSON.parse(data)).getPlainText()})
+          setValues({...values, body: convertFromRaw(JSON.parse(data)).getPlainText()})
         });
         api.subscribeToTitleData(socket, (err, data) => {
           console.log('data from the title change event=', data);
-          setValues({...values, title: data});
+          setTitle(data);
         });
+        api.subscribeToTagData(socket, (err, data) => {
+          console.log('data from the tag change event=', data);
+          setTags(data);
+        })
       }
     } else {
       console.log('creating an empty editor state');
@@ -132,8 +144,11 @@ const DocEditor = () => {
   }
 
   const handleTagChange = (event, value) => {
-      console.log(value);
-      setValues({...values, tags: value});
+    console.log(value);
+    setTags(value);
+    if (socket) {
+      api.sendTagDataChange(socket, value);
+    }
   }
 
   const handlePoemUpdate = () => {
@@ -142,9 +157,9 @@ const DocEditor = () => {
     console.log(values);
     axios.post(poemUpdateRoute, {
       previousTitle: previousTitle,
-      newTitle: values.title,
+      newTitle: title,
       body: values.body,
-      tags: values.tags,
+      tags: tags,
     }, { withCredentials: true }).then(res => {
       console.log(res);
       alert.show("Poem updated successfully.");
@@ -160,9 +175,9 @@ const DocEditor = () => {
     console.log(values);
 
     axios.post(poemCreateRoute, {
-      title: values.title,
+      title: title,
       authors: values.authors,
-      tags: values.tags,
+      tags: tags,
       body: values.body,
       inProgress: true
     }, { withCredentials: true }).then(res => {
@@ -175,7 +190,7 @@ const DocEditor = () => {
   }
 
   const handleTitleChange = e => {
-    setValues({...values, title: e.target.value});
+    setTitle(e.target.value);
     if (socket) {
       api.sendTitleDataChange(socket, e.target.value);
     }
@@ -254,12 +269,12 @@ const DocEditor = () => {
               <div class="text-4x1 u-align-center u-text u-text-1">
                             <form>
                               <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
-                                     value={values.title}
+                                     value={title}
                                      onChange={handleTitleChange}/>
                             </form>
               </div>
               </h1>
-              <TagSelector handleTagChange={handleTagChange}/>
+              <TagSelector value={tags} handleTagChange={handleTagChange}/>
                           <h5 class="u-align-center u-container-style u-text u-text-custom-color-2 u-text-3" data-animation-name="pulse" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""></h5>
                             <div
                                 className="flex flex-col u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
@@ -398,12 +413,12 @@ else {
           <div class="text-4x1 u-align-center u-text u-text-1">
                         <form>
                           <input className="rounded border border-white u-align-center" type="text" placeholder="Enter a Poem Title!"
-                                 value={values.title}
+                                 value={title}
                                  onChange={handleTitleChange}/>
                         </form>
           </div>
           </h1>
-          <TagSelector handleTagChange={handleTagChange}/>
+          <TagSelector value={tags} handleTagChange={handleTagChange}/>
                       <h5 class="u-align-center u-container-style u-text u-text-custom-color-2 u-text-3" data-animation-name="pulse" data-animation-duration="1000" data-animation-delay="0" data-animation-direction=""></h5>
                         <div
                             className="u-border-1 u-border-custom-color-2 u-container-style u-group u-radius-6 u-shape-round u-group-1"
